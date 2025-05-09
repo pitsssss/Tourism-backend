@@ -1,8 +1,12 @@
 <?php
-
+use App\Http\Controllers\Api\AuthController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
-    AuthController,
+
     UserController,
     DestinationController,
     HotelController,
@@ -32,9 +36,22 @@ use App\Http\Controllers\Admin\{
 /// 🌐 Public API routes (No auth needed)
 Route::prefix('v1')->group(function () {
 
-    // ✅ Auth
-    Route::post('/register', [AuthController::class, 'register'])->middleware(['throttle:register']);
+    // ✅ Auth //tested
+    Route::post('/register', [AuthController::class, 'register']);//->middleware(['throttle:register']);
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+
+
+    Route::post('/verify-code', [AuthController::class, 'verifyCode']);
+    Route::post('/resend-verification', [AuthController::class, 'resendVerificationCode']);
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    Route::post('/reset-password', [ForgotPasswordController::class, 'reset']);
+    Route::post('/password/email', [PasswordResetController::class, 'sendResetCode']);
+
+
+
+
+
 
     // ✅ View Destinations, Hotels, Restaurants, Categories
     Route::get('/destinations', [DestinationController::class, 'index']);
@@ -76,7 +93,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     // ✅ Contact Messages
     Route::post('/contact-messages', [ContactMessageController::class, 'store'])->middleware('throttle:contact');
 
-    // ✅ Logout
+    // ✅ Logout//tested
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 

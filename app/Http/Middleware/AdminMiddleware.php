@@ -10,9 +10,9 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->is_admin) {
-            return $next($request);
-        }
+        if (auth()->user() && auth()->user()->role === 'admin') {
+        return $next($request);
+    }
 
         return response()->json(['message' => 'Unauthorized. Admins only.'], 403);
     }
