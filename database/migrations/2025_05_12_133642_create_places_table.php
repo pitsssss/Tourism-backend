@@ -11,28 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hotels', function (Blueprint $table) {
+        Schema::create('places', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('address');
-            // $table->decimal('price', 8, 2)->nullable();
-            $table->float('rating')->nullable();
-            $table->string('image')->nullable();
             $table->string('location');
-            $table->string('phone_number')->nullable();
+            $table->text('description');
+            $table->string('image');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('hotels');
+        Schema::dropIfExists('places');
     }
 };

@@ -2,7 +2,7 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Api\ForgotPasswordController;
-use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
@@ -17,7 +17,8 @@ use App\Http\Controllers\Api\{
     ReviewController,
     SearchController,
     NotificationController,
-    ContactMessageController
+    ContactMessageController,
+    PlaceController
 };
 
 use App\Http\Controllers\Admin\{
@@ -39,15 +40,12 @@ Route::prefix('v1')->group(function () {
     // ✅ Auth //tested
     Route::post('/register', [AuthController::class, 'register']);//->middleware(['throttle:register']);
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
-
-
     Route::post('/verify-code', [AuthController::class, 'verifyCode']);
     Route::post('/resend-verification', [AuthController::class, 'resendVerificationCode']);
 
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
-    Route::post('/reset-password', [ForgotPasswordController::class, 'reset']);
-    Route::post('/password/email', [PasswordResetController::class, 'sendResetCode']);
-
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetCode']);
+    Route::post('/verify-ResetCode', [PasswordResetController::class, 'verifyResetCode']);
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 
 
@@ -56,6 +54,9 @@ Route::prefix('v1')->group(function () {
     // ✅ View Destinations, Hotels, Restaurants, Categories
     Route::get('/destinations', [DestinationController::class, 'index']);
     Route::get('/destinations/{id}', [DestinationController::class, 'show']);
+
+    Route::get('/places', [PlaceController::class, 'index']);
+
 
     Route::get('/hotels', [HotelController::class, 'index']);
     Route::get('/hotels/{id}', [HotelController::class, 'show']);
@@ -74,40 +75,40 @@ Route::prefix('v1')->group(function () {
 /// 🔐 Protected API routes for authenticated users
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
-    // ✅ Bookings
-    Route::get('/bookings', [BookingController::class, 'index']);
-    Route::post('/bookings', [BookingController::class, 'store']);
+     // ✅ Bookings
+    // Route::get('/bookings', [BookingController::class, 'index']);
+    // Route::post('/bookings', [BookingController::class, 'store']);
 
-    // ✅ Favorites
-    Route::get('/favorites/{userId}', [FavoriteController::class, 'index']);
-    Route::post('/favorites', [FavoriteController::class, 'store']);
-    Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy']);
+     // ✅ Favorites
+    // Route::get('/favorites/{userId}', [FavoriteController::class, 'index']);
+    // Route::post('/favorites', [FavoriteController::class, 'store']);
+    // Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy']);
 
-    // ✅ Reviews
-    Route::post('/reviews', [ReviewController::class, 'store']);
-    Route::get('/reviews/{type}/{id}', [ReviewController::class, 'getFor']);
+     // ✅ Reviews
+    // Route::post('/reviews', [ReviewController::class, 'store']);
+    // Route::get('/reviews/{type}/{id}', [ReviewController::class, 'getFor']);
 
     // ✅ Notifications
-    Route::get('/notifications/{userId}', [NotificationController::class, 'index']);
+    // Route::get('/notifications/{userId}', [NotificationController::class, 'index']);
 
-    // ✅ Contact Messages
-    Route::post('/contact-messages', [ContactMessageController::class, 'store'])->middleware('throttle:contact');
+     // ✅ Contact Messages
+    // Route::post('/contact-messages', [ContactMessageController::class, 'store'])->middleware('throttle:contact');
 
     // ✅ Logout//tested
-    Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 /// 🔒 Admin routes (Authenticated + Admin middleware)
-Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+// Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
 
-    Route::apiResource('/users', AdminUserController::class);
-    Route::apiResource('/destinations', AdminDestinationController::class);
-    Route::apiResource('/hotels', AdminHotelController::class);
-    Route::apiResource('/restaurants', AdminRestaurantController::class);
-    Route::apiResource('/categories', AdminCategoryController::class);
-    Route::apiResource('/bookings', AdminBookingController::class);
-    Route::apiResource('/favorites', AdminFavoriteController::class);
-    Route::apiResource('/reviews', AdminReviewController::class);
-    Route::apiResource('/contact-messages', AdminContactMessageController::class);
-    Route::apiResource('/notifications', AdminNotificationController::class);
-});
+//     Route::apiResource('/users', AdminUserController::class);
+//     Route::apiResource('/destinations', AdminDestinationController::class);
+//     Route::apiResource('/hotels', AdminHotelController::class);
+//     Route::apiResource('/restaurants', AdminRestaurantController::class);
+//     Route::apiResource('/categories', AdminCategoryController::class);
+//     Route::apiResource('/bookings', AdminBookingController::class);
+//     Route::apiResource('/favorites', AdminFavoriteController::class);
+//     Route::apiResource('/reviews', AdminReviewController::class);
+//     Route::apiResource('/contact-messages', AdminContactMessageController::class);
+//     Route::apiResource('/notifications', AdminNotificationController::class);
+// });

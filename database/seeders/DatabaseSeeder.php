@@ -1,15 +1,16 @@
 <?php
 
 namespace Database\Seeders;
-
-use Database\Seeders\UserSeeder;
+use Illuminate\Database\Seeder;
+// use Database\Seeders\UserSeeder;
+// use CategorySeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use BookingSeeder;
-use CategorySeeder;
+ use BookingSeeder;
+
 use ContactMessageSeeder;
 use DestinationSeeder;
 use FavoriteSeeder;
-use Illuminate\Database\Seeder;
+
 use NotificationSeeder;
 use RestaurantSeeder;
 use ReviewSeeder;
@@ -21,16 +22,16 @@ class DatabaseSeeder extends Seeder {
 
     public function run() {
         $this->call( [
-            UserSeeder::class,
-            CategorySeeder::class,
-            DestinationSeeder::class,
-            HotelSeeder::class,
-            RestaurantSeeder::class,
-            BookingSeeder::class,
-            FavoriteSeeder::class,
-            ReviewSeeder::class,
-            NotificationSeeder::class,
-            ContactMessageSeeder::class,
+             UserSeeder::class,
+            CategorySeeder::class
+            // DestinationSeeder::class,
+            // HotelSeeder::class,
+            // RestaurantSeeder::class,
+            // BookingSeeder::class,
+            // FavoriteSeeder::class,
+            // ReviewSeeder::class,
+            // NotificationSeeder::class,
+            // ContactMessageSeeder::class,
         ] );
     }
 
