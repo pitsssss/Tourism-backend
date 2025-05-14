@@ -43,7 +43,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/verify-code', [AuthController::class, 'verifyCode']);
     Route::post('/resend-verification', [AuthController::class, 'resendVerificationCode']);
 
-    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetCode']);
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetCode'])
+    ->middleware('throttle:2,1'); // 2 attempts per minute
     Route::post('/verify-ResetCode', [PasswordResetController::class, 'verifyResetCode']);
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
@@ -51,25 +52,25 @@ Route::prefix('v1')->group(function () {
 
 
 
-    // ✅ View Destinations, Hotels, Restaurants, Categories
-    Route::get('/destinations', [DestinationController::class, 'index']);
-    Route::get('/destinations/{id}', [DestinationController::class, 'show']);
+//     // ✅ View Destinations, Hotels, Restaurants, Categories
+//     Route::get('/destinations', [DestinationController::class, 'index']);
+//     Route::get('/destinations/{id}', [DestinationController::class, 'show']);
 
-    Route::get('/places', [PlaceController::class, 'index']);
+//     Route::get('/places', [PlaceController::class, 'index']);
 
 
-    Route::get('/hotels', [HotelController::class, 'index']);
-    Route::get('/hotels/{id}', [HotelController::class, 'show']);
+//     Route::get('/hotels', [HotelController::class, 'index']);
+//     Route::get('/hotels/{id}', [HotelController::class, 'show']);
 
-    Route::get('/restaurants', [RestaurantController::class, 'index']);
-    Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
+//     Route::get('/restaurants', [RestaurantController::class, 'index']);
+//     Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
 
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
+//     Route::get('/categories', [CategoryController::class, 'index']);
+//     Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
-    Route::get('/users/{id}', [UserController::class, 'show']);
+//     Route::get('/users/{id}', [UserController::class, 'show']);
 
-    Route::get('/search', [SearchController::class, 'search']);
+//     Route::get('/search', [SearchController::class, 'search']);
 });
 
 /// 🔐 Protected API routes for authenticated users
