@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Hotel extends Model {
-    protected $fillable = [
-        'name', 'description', 'address', 'price', 'rating', 'image', 'location', 'phone_number'
-    ];
+    protected $guard=[];
+    // protected $fillable = [
+    //     'name', 'description', 'address', 'price', 'rating', 'image', 'location', 'phone_number'
+    // ];
 
-    public function destination() {
-        return $this->belongsTo(Destination::class);
-    }
+    // public function destination() {
+    //     return $this->belongsTo(Destination::class);
+    // }
 
     public function category() {
         return $this->belongsTo(Category::class);

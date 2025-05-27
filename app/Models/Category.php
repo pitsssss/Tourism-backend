@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
 
-    protected $fillable = ['name'];
-    public function places()
+    protected $guard=[];
+    public function trips()
     {
-        return $this->hasMany(Place::class);
+        return $this->hasMany(Trips::class);
     }
 
     public function hotels() {

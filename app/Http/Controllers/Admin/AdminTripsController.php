@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Trips;
 use Illuminate\Http\Request;
-use App\Models\Destination;
-
-class AdminDestinationController extends Controller
+class AdminTripsController extends Controller
 {
 
     public function index()
     {
-        return Destination::with('category')->get();
+        return Trips::with('category')->get();
     }
 
 
@@ -25,7 +24,7 @@ class AdminDestinationController extends Controller
             'image' => 'nullable|string',
         ]);
 
-        $destination = Destination::create($validated);
+        $destination = Trips::create($validated);
 
         return response()->json($destination, 201);
     }
@@ -33,14 +32,14 @@ class AdminDestinationController extends Controller
 
     public function show($id)
     {
-        $destination = Destination::with('category')->findOrFail($id);
+        $destination = Trips::with('category')->findOrFail($id);
         return response()->json($destination);
     }
 
 
     public function update(Request $request, $id)
     {
-        $destination = Destination::findOrFail($id);
+        $destination = Trips::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
@@ -58,7 +57,7 @@ class AdminDestinationController extends Controller
 
     public function destroy($id)
     {
-        Destination::destroy($id);
-        return response()->json(['message' => 'Destination deleted successfully']);
+        Trips::destroy($id);
+        return response()->json(['message' => 'Trips deleted successfully']);
     }
 }

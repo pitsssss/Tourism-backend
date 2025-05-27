@@ -9,6 +9,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
+
         return Category::all();
     }
 
@@ -16,4 +17,13 @@ class CategoryController extends Controller
     {
         return Category::findOrFail($id);
     }
+
+    public function getTrips($id)
+{
+    $category = Category::with('trips')->findOrFail($id);
+    return response()->json([
+        'category' => $category->name,
+        'trips' => $category->trips
+    ]);
+}
 }

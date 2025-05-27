@@ -10,7 +10,10 @@ class CategorySeeder extends Seeder
     {
         $categories = ['Sea','Beach', 'Mountain', 'Historical', 'Desert', 'City'];
         foreach ($categories as $name) {
-            Category::create(['name' => $name]);
+            Category::create([
+                'name' => $name
+
+         ]);
         }
     }
 }

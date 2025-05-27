@@ -5,15 +5,15 @@ use Illuminate\Database\Seeder;
 // use Database\Seeders\UserSeeder;
 // use CategorySeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
- use BookingSeeder;
+//  use BookingSeeder;
 
-use ContactMessageSeeder;
-use DestinationSeeder;
-use FavoriteSeeder;
+// use ContactMessageSeeder;
+// use FavoriteSeeder;
 
-use NotificationSeeder;
-use RestaurantSeeder;
-use ReviewSeeder;
+// use NotificationSeeder;
+// use RestaurantSeeder;
+// use ReviewSeeder;
+
 
 class DatabaseSeeder extends Seeder {
     /**
@@ -22,10 +22,12 @@ class DatabaseSeeder extends Seeder {
 
     public function run() {
         $this->call( [
-             UserSeeder::class,
-            CategorySeeder::class
-            // DestinationSeeder::class,
-            // HotelSeeder::class,
+             //UserSeeder::class,
+             CategorySeeder::class,
+             TripsSeeder::class,
+             DaySeeder::class,
+             ActivitySeeder::class,
+             HotelSeeder::class,
             // RestaurantSeeder::class,
             // BookingSeeder::class,
             // FavoriteSeeder::class,

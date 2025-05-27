@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Trips;
 use Illuminate\Http\Request;
 use App\Models\Destination;
 use App\Models\Hotel;
@@ -15,9 +16,9 @@ class SearchController extends Controller
         $keyword = $request->input('keyword');
 
         return response()->json([
-            'destinations' => Destination::where('name', 'like', "%$keyword%")->get(),
-            'hotels'       => Hotel::where('name', 'like', "%$keyword%")->get(),
-            'restaurants'  => Restaurant::where('name', 'like', "%$keyword%")->get(),
+            'trips'        => Trips::where('name', 'like', "%$keyword%")->get()
+            // 'hotels'       => Hotel::where('name', 'like', "%$keyword%")->get(),
+            // 'restaurants'  => Restaurant::where('name', 'like', "%$keyword%")->get(),
         ]);
     }
 }
