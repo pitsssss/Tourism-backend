@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('transport');
             $table->text('description');
+            $table->text('start_date')->nullable(); 
             $table->string('image')->nullable();
             $table->foreignId('hotel_id')->onDelete('cascade');
             $table->foreignId('category_id')->onDelete('cascade');

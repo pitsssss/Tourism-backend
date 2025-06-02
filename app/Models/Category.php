@@ -10,7 +10,7 @@ class Category extends Model
     protected $guard=[];
     public function trips()
     {
-        return $this->hasMany(Trips::class);
+        return $this->hasMany(Trip::class);
     }
 
     public function hotels() {

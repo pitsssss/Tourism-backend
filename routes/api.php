@@ -58,6 +58,11 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/trips', [CategoryController::class, 'getTrips']);
+Route::get('/categories/{id}/trips', [TripsController::class, 'getTripsByCategory']);
+Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
+
+
+
 
     Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
 

@@ -9,10 +9,16 @@ class Day extends Model
     protected $guard=[];
     public function trip()
     {
-        return $this->belongsTo(Trips::class);
+        return $this->belongsTo(Trip::class);
     }
-    public function avtivity()
-    {
-        return $this->hasMany(Activity::class);
-    }
+    // public function avtivity()
+    // {
+    //     return $this->hasMany(Activity::class);
+    // }
+
+    public function activities()
+{
+    return $this->hasMany(Activity::class);
+}
+
 }

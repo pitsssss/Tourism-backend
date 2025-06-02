@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Trips;
+use App\Models\Trip;
 use App\Models\Category;
 use App\Models\Hotel;
 use App\Models\Activity;
@@ -13,18 +13,19 @@ class TripsSeeder extends Seeder
 {
     public function run()
     {
-        Trips::create([
+        Trip::create([
             'name' => ' To Palmyra',
             'description' => 'Ancient city in the desert',
+            'image' => 'imgs\categories.img\تنزيل.jpg',
             'category_id' => 1,
             'transport' => 'Bus',
             'price' => 500,
             'hotel_id' => 1,
-            'count_days' => 7
+            'count_days' => 4
         ]);
 
 
-        Trips::create([
+        Trip::create([
             'name' => ' To Lattakia',
             'description' => 'best beach in the country',
             'category_id' => 2,

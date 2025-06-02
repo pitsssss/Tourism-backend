@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
-    public function destination() {
-        return $this->belongsTo(Destination::class);
-    }
+    // public function destination() {
+    //     return $this->belongsTo(Destination::class);
+    // }
 
     public function category() {
         return $this->belongsTo(Category::class);

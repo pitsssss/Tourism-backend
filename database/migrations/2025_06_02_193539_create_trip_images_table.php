@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('categorie_photo_path')->nullable();
-            $table->timestamps();
+        Schema::create('trip_images', function (Blueprint $table) {
+          $table->id();
+    $table->string('image');
+    $table->foreignId('trip_id')->constrained('trips')->onDelete('cascade');
+    $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('trip_images');
     }
 };
