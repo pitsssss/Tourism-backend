@@ -53,7 +53,7 @@ Route::prefix('v1')->group(function () {
 
 
 //     // ✅ View trips, Hotels, Restaurants, Categories
-    Route::get('/trips', [TripsController::class, 'index']);
+    Route::get('/Alltrips', [TripsController::class, 'getAllTrips']);
     Route::get('/trips/{id}', [TripsController::class, 'show']);
 
     Route::get('/categories', [CategoryController::class, 'index']);

@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 
 class TripsController extends Controller
 {
-    // public function index()
-    // {
-    //     $trips = Trips::all();
-    //     return new TripsResource($trips);
-    // }
+   public function getAllTrips()
+{
+    $trips = Trip::select('id','image', 'name', 'price', 'description', 'start_date')
+                ->get();
+
+    return response()->json($trips);
+}
     public function show($id)
     {
         $trips = Trip::findOrFail($id);
