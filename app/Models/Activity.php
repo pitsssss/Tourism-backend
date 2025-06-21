@@ -16,4 +16,10 @@ class Activity extends Model
     {
         return $this->belongsTo(Day::class);
     }
+
+    public function images()
+{
+    return $this->hasMany(activity_images::class);
+}
+
 }

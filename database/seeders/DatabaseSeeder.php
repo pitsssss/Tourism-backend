@@ -11,7 +11,7 @@ use Illuminate\Database\Seeder;
 // use FavoriteSeeder;
 
 // use NotificationSeeder;
-// use RestaurantSeeder;
+ //use RestaurantSeeder;
 // use ReviewSeeder;
 
 
@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder {
              DaySeeder::class,
              ActivitySeeder::class,
              HotelSeeder::class,
-            // RestaurantSeeder::class,
+             RestaurantSeeder::class,
+             PlacesSeeder::class,
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,

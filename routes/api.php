@@ -18,7 +18,8 @@ use App\Http\Controllers\Api\{
     SearchController,
     NotificationController,
     ContactMessageController,
-    PlaceController
+    PlaceController,
+    ExploreController
 };
 
 use App\Http\Controllers\Admin\{
@@ -55,16 +56,26 @@ Route::prefix('v1')->group(function () {
 //     // ✅ View trips, Hotels, Restaurants, Categories
     Route::get('/Alltrips', [TripsController::class, 'getAllTrips']);
     Route::get('/trips/{id}', [TripsController::class, 'show']);
-
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/trips', [CategoryController::class, 'getTrips']);
+
+
+
 Route::get('/categories/{id}/trips', [TripsController::class, 'getTripsByCategory']);
 Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
+Route::get('/trips/category/{categoryId}', [TripsController::class, 'showCategoryTripsSorted']);//new
+ Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
+Route::get('/activity_details/{activityId}', [TripsController::class, 'show_activity_details']);//new
+/////Explor
+Route::get('/explore/hotels', [ExploreController::class, 'getAllHotels']);
+Route::get('/explore/restaurants', [ExploreController::class, 'getAllRestaurants']);
+Route::get('/explore/activities', [ExploreController::class, 'getAllActivities']);
+Route::get('/explore/places', [ExploreController::class, 'getAllPlaces']);
 
 
 
 
-    Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
+   
 
 //     Route::get('/places', [PlaceController::class, 'index']);
 

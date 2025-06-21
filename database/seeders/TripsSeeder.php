@@ -34,6 +34,21 @@ class TripsSeeder extends Seeder
             'hotel_id' => 2,
             'count_days' => 4
         ]);
-    }
+    
 
+Trip::create(
+    [
+    'name' => 'Trip to Palmyra',
+    'transport' => 'Bus',
+    'description' => 'Explore the ancient ruins of Palmyra.',
+    'start_date' => ('5/5/2024'),
+    'image' => 'imgs\trips.img\تنزيل.jpg',
+    'hotel_id' => 1,
+    'category_id' => 1, 
+    'price' => 150000,
+    'count_days' => 3,
+    'created_at' => now(),
+    'updated_at' => now(),
+    ]);
+    }
 }

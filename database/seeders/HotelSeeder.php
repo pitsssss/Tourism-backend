@@ -17,7 +17,7 @@ class HotelSeeder extends Seeder
             'image' => 'shaam.jpg',
             'location' => 'Damascus',
             'phone_number' => '+96311222333',
-            'category_id'=>3
+            
 
         ]);
 
@@ -29,7 +29,7 @@ class HotelSeeder extends Seeder
             'image' => 'aleppo_star.jpg',
             'location' => 'Aleppo',
             'phone_number' => '+96311444555',
-            'category_id'=>1
+            
         ]);
     }
 }

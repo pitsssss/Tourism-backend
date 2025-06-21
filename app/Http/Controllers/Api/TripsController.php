@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TripsResource;
 use App\Models\Trip;
 use Illuminate\Http\Request;
-
+use App\Models\Activity;
 class TripsController extends Controller
 {
    public function getAllTrips()
@@ -103,6 +103,43 @@ public function getTripDetails($id)
     ];
 
     return response()->json($result);
+}
+
+
+public function showCategoryTripsSorted(Request $request, $categoryId)
+{
+    $query = Trip::where('category_id', $categoryId); 
+
+    if ($request->has('sort_by')) {
+        $sortField = $request->get('sort_by');
+        $sortOrder = $request->get('order', 'asc');
+
+        if (in_array($sortField, ['price', 'created_at'])) {
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        if ($sortField == 'days') {
+            $query->orderBy('count_days', $sortOrder);
+        }
+    }
+
+    $trips = $query->with('category')->get();
+
+    return response()->json($trips);
+}
+
+public function show_activity_details($id)
+{
+    $activity = Activity::with('images')->findOrFail($id);
+
+    return response()->json([
+        'name' => $activity->name,
+        'description' => $activity->description,
+        'start_time' => $activity->start_time,
+        'end_time' => $activity->end_time,
+        'main_image' => $activity->image,
+        'gallery' => $activity->images->pluck('image_path'), 
+    ]);
 }
 
 

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->float('rating')->nullable();
             $table->string('image')->nullable();
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+           // $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
 
             $table->timestamps();
         });
