@@ -15,6 +15,8 @@ return new class extends Migration
              $table->id();
     $table->foreignId('activity_id')->constrained()->onDelete('cascade');
     $table->string('image_path');
+    $table->foreignId('governorate_id')->nullable()->constrained()->onDelete('set null');
+
     $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Api\{
 
     TripsController,
@@ -19,7 +20,12 @@ use App\Http\Controllers\Api\{
     NotificationController,
     ContactMessageController,
     PlaceController,
-    ExploreController
+    ExploreController,
+    GovernoratesController,
+    PrivateTripController,
+    UserTripsController,
+    DayController
+   
 };
 
 use App\Http\Controllers\Admin\{
@@ -74,6 +80,8 @@ Route::get('/explore/places', [ExploreController::class, 'getAllPlaces']);
 
 
 
+Route::get('/governorates', [GovernoratesController::class, 'index']);
+
 
    
 
@@ -95,6 +103,15 @@ Route::get('/explore/places', [ExploreController::class, 'getAllPlaces']);
 
 /// 🔐 Protected API routes for authenticated users
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+
+
+Route::post('/private-trips', [PrivateTripController::class, 'store']);//make privat trip
+Route::post('/book-trip', [UserTripsController::class, 'bookTrip']);
+Route::get('/user-trips/upcoming', [UserTripsController::class, 'upcomingTrips']);//all trip upcoming
+Route::post('/private-trips/{trip}/days', [DayController::class, 'store']);//add day to private trip
+Route::get('/private-trip/{trip}/hotels', [PrivateTripController::class, 'getHotels']);//get hotel by governorates
+Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);
+
 
      // ✅ Bookings
     // Route::get('/bookings', [BookingController::class, 'index']);

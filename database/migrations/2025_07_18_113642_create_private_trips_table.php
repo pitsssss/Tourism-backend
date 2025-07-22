@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('places', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('location');
-            $table->text('description');
-            $table->string('image');
-           // $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+        Schema::create('private_trips', function (Blueprint $table) {
+           $table->id();
+           $table->foreignId('user_id')->constrained()->onDelete('cascade');
            $table->foreignId('governorate_id')->constrained()->onDelete('cascade');
-
-            $table->timestamps();
+           $table->date('trip_date_start');
+           $table->timestamps();
         });
     }
 
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('places');
+        Schema::dropIfExists('private_trips');
     }
 };

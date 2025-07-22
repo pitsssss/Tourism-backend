@@ -30,5 +30,9 @@ class Hotel extends Model {
         return $this->hasMany(Favorite::class);
     }
 
+public function hotels()
+{
+    return $this->hasMany(Hotel::class, 'governorate_id');
+}
 
 }

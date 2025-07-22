@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Day extends Model
 {
-    protected $guard=[];
+   protected $fillable = ['name', 'TripDay', 'tripable_id', 'tripable_type', 'date'];
+
     public function trip()
     {
         return $this->belongsTo(Trip::class);
@@ -20,5 +21,10 @@ class Day extends Model
 {
     return $this->hasMany(Activity::class);
 }
+public function tripable()
+{
+    return $this->morphTo();
+}
+
 
 }

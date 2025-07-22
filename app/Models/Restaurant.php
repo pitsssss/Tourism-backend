@@ -22,5 +22,9 @@ class Restaurant extends Model
     public function favorites() {
         return $this->hasMany(Favorite::class);
     }
+      public function governorate()
+    {
+        return $this->belongsTo(governorates::class,'governorate_id');
+    }
 
 }

@@ -16,6 +16,7 @@ class HotelSeeder extends Seeder
             'rating' => 4.5,
             'image' => 'shaam.jpg',
             'location' => 'Damascus',
+            'governorate_id' => 1,
             'phone_number' => '+96311222333',
             
 
@@ -28,6 +29,7 @@ class HotelSeeder extends Seeder
             'rating' => 4.2,
             'image' => 'aleppo_star.jpg',
             'location' => 'Aleppo',
+            'governorate_id' => 1,
             'phone_number' => '+96311444555',
             
         ]);

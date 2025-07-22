@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder {
         $this->call( [
              //UserSeeder::class,
              CategorySeeder::class,
+              GovernoratesSeeder::class,
              TripsSeeder::class,
              DaySeeder::class,
              ActivitySeeder::class,
@@ -35,6 +36,8 @@ class DatabaseSeeder extends Seeder {
             // ReviewSeeder::class,
             // NotificationSeeder::class,
             // ContactMessageSeeder::class,
+           
+           // UserTripSeeder::class
         ] );
     }
 

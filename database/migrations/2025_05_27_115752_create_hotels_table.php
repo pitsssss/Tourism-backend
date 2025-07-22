@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('phone_number')->nullable();
            // $table->foreignId('category_id')->onDelete('cascade');
+            $table->foreignId('governorate_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -21,5 +21,9 @@ class Activity extends Model
 {
     return $this->hasMany(activity_images::class);
 }
+  public function governorate()
+    {
+        return $this->belongsTo(governorates::class,'governorate_id');
+    }
 
 }

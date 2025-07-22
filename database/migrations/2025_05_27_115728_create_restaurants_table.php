@@ -21,7 +21,8 @@ return new class extends Migration
             $table->float('rating')->nullable();
             $table->string('image')->nullable();
            // $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-
+           $table->foreignId('governorate_id')->constrained()->onDelete('cascade');
+   
             $table->timestamps();
         });
     }

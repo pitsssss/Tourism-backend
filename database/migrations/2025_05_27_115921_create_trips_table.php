@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('category_id')->onDelete('cascade');
             $table->double('price')->nullable();
             $table->integer('count_days');
+            $table->foreignId('governorate_id')->nullable()->constrained('governorates') ->onDelete('set null');
             $table->timestamps();
         });
     }

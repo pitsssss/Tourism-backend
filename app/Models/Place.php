@@ -11,4 +11,12 @@ class Place extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+ 
+    public function governorate()
+    {
+        return $this->belongsTo(governorates::class,'governorate_id');
+    }
+
+
 }

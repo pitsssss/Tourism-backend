@@ -18,6 +18,7 @@ class PlacesSeeder extends Seeder
                 'location' => 'Damascus, Syria',
                 'description' => 'The historic old city of Damascus, full of ancient architecture and culture.',
                 'image' => 'imgs\place.img\تنزيل (2).jpg',
+                'governorate_id'=>1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],]);
