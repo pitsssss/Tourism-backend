@@ -7,11 +7,20 @@ use App\Models\TripImage;
 
 class Trip extends Model
 {
-    protected $guard=[];
-    // public function days()
-    // {
-    //     return $this->hasMany(Day::class);
-    // }
+   protected $fillable = [
+		'name',
+        'transport',
+        'description',
+		'start_date',
+		'image',
+		'hotel_id',
+		'category_id',
+        'price',
+        'count_days',
+        'governorate_id',
+        'guide_id'
+        
+	];
 
     public function hotel() {
     return $this->belongsTo(Hotel::class);
@@ -32,6 +41,11 @@ public function governorate()
 public function days()
 {
     return $this->morphMany(Day::class, 'tripable');
+}
+
+public function guide()
+{
+    return $this->belongsTo(TourGuide::class, 'guide_id');
 }
 
 }

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder {
 
     public function run() {
         $this->call( [
-             //UserSeeder::class,
+             UserSeeder::class,
              CategorySeeder::class,
               GovernoratesSeeder::class,
              TripsSeeder::class,
@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder {
              HotelSeeder::class,
              RestaurantSeeder::class,
              PlacesSeeder::class,
+             GuideSeeder::class
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,

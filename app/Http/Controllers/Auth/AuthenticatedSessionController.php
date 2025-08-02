@@ -22,23 +22,36 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
 {
-    $request->authenticate();
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-    $request->session()->regenerate();
+    if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        $request->session()->regenerate();
 
-    $user = auth()->user();
-
-    if ($user->role !== 'admin') {
-        auth()->logout();
-        return redirect()->route('login')->withErrors([
-            'email' => 'You are not authorized to access the admin panel.',
-        ]);
+        switch (auth()->user()->role) {
+            case 'super_admin':
+                return redirect()->route('super_admin.dashboard');
+            case 'admin_users':
+                return redirect()->route('admin_users.dashboard');
+            case 'admin_trips':
+                return redirect()->route('dashboard');
+            case 'admin_hotels':
+                return redirect()->route('admin_hotels.dashboard');
+            
+            default:
+                return redirect('/'); 
+        }
     }
 
-    return redirect()->intended('/dashboard');
+    return back()->withErrors([
+        'email' => 'المعلومات غير صحيحة.',
+    ]);
 }
+
     /**
      * Destroy an authenticated session.
      */

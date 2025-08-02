@@ -8,6 +8,10 @@ use App\Mail\SendVerificationCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
+
 
 class AuthController extends Controller
 {
@@ -103,6 +107,23 @@ public function resendVerificationCode(Request $request)
             return response()->json(['message' => 'Invalid email or password'], 401);
         }
 
+
+ if ($user->fcm_token) {
+        $factory = (new Factory)
+            ->withServiceAccount(base_path('storage/app/firebase/firebase_credentials.json')); 
+
+        $messaging = $factory->createMessaging();
+
+        $message = CloudMessage::withTarget('token', $user->fcm_token)
+            ->withNotification(FirebaseNotification::create(
+                'أهلاً من جديد 🎉',
+                "تم تسجيل دخولك بنجاح 😊"
+            ));
+
+        $messaging->send($message);
+    }
+
+
         return response()->json([
             'token' => $user->createToken('API Token')->plainTextToken,
             'user' => $user
@@ -120,4 +141,19 @@ public function resendVerificationCode(Request $request)
     {
         return response()->json($request->user());
     }
+
+
+    public function saveFcmToken(Request $request)
+{
+    $request->validate([
+        'fcm_token' => 'required|string',
+    ]);
+
+    $user = auth()->user(); 
+    $user->fcm_token = $request->fcm_token;
+    $user->save();
+
+    return response()->json(['message' => 'Token saved successfully']);
+}
+
 }

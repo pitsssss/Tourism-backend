@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'user', 'visitor'])->default('visitor');
+            $table->enum('role', ['super_admin', 'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places', 'user', 'visitor'])->default('visitor');
             $table->string('verification_code')->nullable();
             $table->boolean('is_verified')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

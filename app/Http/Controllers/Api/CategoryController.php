@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\TourGuide;
 
 class CategoryController extends Controller
 {
@@ -20,7 +21,7 @@ class CategoryController extends Controller
 
     public function getTrips($id)
 {
-    $category = Category::with('trips')->findOrFail($id);
+    $category = Category::with('trips.tourguide')->findOrFail($id);
     return response()->json([
         'category' => $category->name,
         'trips' => $category->trips

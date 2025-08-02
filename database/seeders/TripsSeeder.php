@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Hotel;
 use App\Models\Activity;
 use App\Models\Day;
+use App\Models\TourGuide;
+
 
 class TripsSeeder extends Seeder
 {
@@ -21,7 +23,8 @@ class TripsSeeder extends Seeder
             'transport' => 'Bus',
             'price' => 500,
             'hotel_id' => 1,
-            'count_days' => 4
+            'count_days' => 4,
+            'guide_id'=> 1
         ]);
 
 
@@ -32,7 +35,8 @@ class TripsSeeder extends Seeder
             'transport' => 'Bus',
             'price' => 300,
             'hotel_id' => 2,
-            'count_days' => 4
+            'count_days' => 4,
+              'guide_id'=> 1
         ]);
     
 
@@ -47,6 +51,7 @@ Trip::create(
     'category_id' => 1, 
     'price' => 150000,
     'count_days' => 3,
+      'guide_id'=> 1,
     'created_at' => now(),
     'updated_at' => now(),
     ]);

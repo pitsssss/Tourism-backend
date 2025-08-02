@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('price')->nullable();
             $table->integer('count_days');
             $table->foreignId('governorate_id')->nullable()->constrained('governorates') ->onDelete('set null');
+            $table->unsignedBigInteger('guide_id')->constrained('guides')->onDelete('set null');
             $table->timestamps();
         });
     }

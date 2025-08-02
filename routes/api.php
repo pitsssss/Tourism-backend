@@ -105,6 +105,10 @@ Route::get('/governorates', [GovernoratesController::class, 'index']);
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
 
+Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
+
+
+
 Route::post('/private-trips', [PrivateTripController::class, 'store']);//make privat trip
 Route::post('/book-trip', [UserTripsController::class, 'bookTrip']);
 Route::get('/user-trips/upcoming', [UserTripsController::class, 'upcomingTrips']);//all trip upcoming

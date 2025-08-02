@@ -7,20 +7,25 @@ use App\Http\Resources\TripsResource;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use App\Models\TourGuide;
 class TripsController extends Controller
 {
-   public function getAllTrips()
-{
-    $trips = Trip::select('id','image', 'name', 'price', 'description', 'start_date')
-                ->get();
 
+
+    public function getAllTrips()
+{
+      $trips = Trip::with('guide:id,name,phone,rating,image')
+                ->select('id', 'image', 'name', 'price', 'description', 'start_date', 'guide_id')
+                ->get();
     return response()->json($trips);
 }
+
+   
     public function show($id)
-    {
-        $trips = Trip::findOrFail($id);
-        return new TripsResource($trips);
-    }
+   {
+    $trip = Trip::with('guide:id,name,phone,rating,image')->findOrFail($id); 
+    return new TripsResource($trip);
+}
     // public function search(Request $request)
     // {
     //     $keyword = $request->input('keyword');
@@ -51,16 +56,18 @@ class TripsController extends Controller
         }
     }
 
-    $trips = $query->with('category')->get();
+    $trips = $query->with('category','guide')->get();
 
     return response()->json($trips);
 }
 
 public function getTripsByCategory($categoryId)
 {
-    $trips = trip::where('category_id', $categoryId)
-                ->select('id', 'name', 'image', 'price', 'start_date', 'description')
-                ->get();
+   $trips = Trip::where('category_id', $categoryId)
+                    ->with('guide:id,name,phone,rating,image')
+                    ->select('id', 'name', 'image', 'price', 'start_date', 'description', 'guide_id')
+                    ->get();
+
 
     return response()->json($trips);
 }
@@ -71,7 +78,8 @@ public function getTripDetails($id)
     $trip = Trip::with([
         'images',
         'hotel:id,name',
-        'days.activities'
+        'days.activities',
+         'guide',
     ])->findOrFail($id);
 
     $result = [
@@ -83,6 +91,14 @@ public function getTripDetails($id)
         'count_days' => $trip->count_days,
         'hotel_name' => $trip->hotel->name ?? null,
         'images' => $trip->images->pluck('image'),
+
+ 'tour_guide' => $trip->guide  ? [
+            'name' => $trip->guide->name,
+            'phone' => $trip->guide->phone,
+            'rating' => $trip->guide->rating,
+            'image' => $trip->guide->image,
+        ] : null,
+
         'days' => $trip->days->map(function ($day) {
             return [
                 'id' => $day->id,
@@ -123,7 +139,7 @@ public function showCategoryTripsSorted(Request $request, $categoryId)
         }
     }
 
-    $trips = $query->with('category')->get();
+    $trips = $query->with('category','guide')->get();
 
     return response()->json($trips);
 }

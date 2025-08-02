@@ -23,7 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'fcm_token'
     ];
 
     /**
@@ -75,5 +76,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function notifications() {
         return $this->hasMany(Notification::class); // if you use a custom notification model
     }
+public function userTrips()
+{
+    return $this->hasMany(user_trips::class);
+}
 
 }
