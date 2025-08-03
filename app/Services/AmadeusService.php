@@ -10,7 +10,7 @@ use Mockery\Matcher\Type;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-
+use Stripe\Stripe;
 
 class AmadeusService
 {
@@ -285,220 +285,128 @@ private function formatDuration1(string $isoDuration): string
         return 'Duration not available';
     }
 }
-public function createBooking(array $bookingData, string $offerId)
+public function createBooking(array $passengers, string $flightOfferId)
 {
-    try {
-        $token = $this->getAccessToken();
-        $offer = Cache::get("flight_offer_{$offerId}");
+    $token = $this->getAccessToken();
+    $flightOffer = Cache::get("flight_offer_{$flightOfferId}");
 
-        if (!$offer) {
-            throw new \Exception("The flight offer has expired. Please search again.");
-        }
-
-        // التحقق من صحة بيانات المسافرين
-        $formattedTravelers = $this->validateAndFormatTravelers($bookingData['travelers']);
-
-        $requestData = [
-            'data' => [
-                'type' => 'flight-order',
-                'flightOffers' => [$offer],
-                'travelers' => $formattedTravelers,
-                'remarks' => [
-                    'general' => [$bookingData['notes'] ?? 'Booking via Mobile App']
-                ],
-                'ticketingAgreement' => [
-                    'option' => 'DELAY_TO_CANCEL',
-                    'delay' => '6h'
-                ],
-                'contacts' => $this->formatContactInfo($bookingData['contact'])
-            ]
-        ];
-
-        \Log::info('Sending booking request to Amadeus', ['request' => $requestData]);
-
-        $response = Http::withToken($token)
-            ->timeout(30) // زيادة وقت الانتظار
-            ->retry(3, 500) // إعادة المحاولة 3 مرات
-            ->post('https://test.api.amadeus.com/v1/booking/flight-orders', $requestData);
-
-        if ($response->failed()) {
-            $errorDetails = $response->json();
-            \Log::error('Amadeus Booking Failed', [
-                'error' => $errorDetails,
-                'request' => $requestData,
-                'status' => $response->status()
-            ]);
-
-            throw new \Exception($errorDetails['errors'][0]['detail'] ?? 'Failed to create booking');
-        }
-
-        $responseData = $response->json();
-        \Log::info('Booking created successfully', ['response' => $responseData]);
-
-        return $responseData;
-
-    } catch (\Exception $e) {
-        \Log::error('Amadeus Booking Exception', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        throw new \Exception("Booking failed: " . $e->getMessage());
+    if (!$flightOffer) {
+        throw new \Exception("Flight offer not found or expired.");
     }
-}
 
-private function validateAndFormatTravelers(array $travelers): array
-{
-    $formatted = [];
-    foreach ($travelers as $index => $traveler) {
-        if (empty($traveler['firstName'])) {
-            throw new \Exception("First name is required for traveler " . ($index + 1));
-        }
+    // ✅ تحقق من عدد الركاب
+    $expectedCount = count($flightOffer['travelerPricings']);
+    if (count($passengers) !== $expectedCount) {
+        throw new \Exception("Number of passengers does not match the priced flight offer.");
+    }
 
-        $formatted[] = [
-            'id' => $index + 1,
-            'dateOfBirth' => $traveler['birthDate'],
+    $travelerArray = [];
+    foreach ($passengers as $index => $p) {
+        $travelerArray[] = [
+            'id' => (string)($index + 1),
+            'dateOfBirth' => $p['dateOfBirth'],
             'name' => [
-                'firstName' => $traveler['firstName'],
-                'lastName' => $traveler['lastName']
+                'firstName' => $p['firstName'],
+                'lastName' => $p['lastName'],
             ],
-            'gender' => strtoupper($traveler['gender']),
+            'gender' => $p['gender'],
             'contact' => [
-                'email' => $traveler['email'],
+                'emailAddress' => $p['email'],
                 'phones' => [
                     [
                         'deviceType' => 'MOBILE',
-                        'countryCallingCode' => $traveler['countryCode'],
-                        'number' => $traveler['phone']
+                        'countryCallingCode' => '963',
+                        'number' => $p['phone'],
                     ]
                 ]
             ],
             'documents' => [
                 [
                     'documentType' => 'PASSPORT',
-                    'number' => $traveler['passportNumber'],
-                    'issuanceDate' => $traveler['passportIssueDate'],
-                    'expiryDate' => $traveler['passportExpiryDate'],
-                    'issuanceCountry' => $traveler['passportCountry'],
-                    'nationality' => $traveler['nationality']
+                    'number' => '00000000',
+                    'expiryDate' => '2030-01-01',
+                    'issuanceCountry' => 'SY',
+                    'nationality' => 'SY',
+                    'holder' => true
                 ]
             ]
         ];
     }
-    return $formatted;
-}
 
-private function formatContactInfo(array $contact): array
-{
-    return [
-        [
-            'addresseeName' => [
-                'firstName' => $contact['firstName'],
-                'lastName' => $contact['lastName']
-            ],
-            'email' => $contact['email'],
-            'phones' => [
-                [
-                    'deviceType' => 'MOBILE',
-                    'countryCallingCode' => $contact['countryCode'],
-                    'number' => $contact['phone']
-                ]
-            ]
+    $data = [
+        'data' => [
+            'type' => 'flight-order',
+            'flightOffers' => [$flightOffer],
+            'travelers' => $travelerArray
         ]
     ];
+
+    $response = Http::withToken($token)
+        ->withHeaders(['Content-Type' => 'application/json'])
+        ->post('https://test.api.amadeus.com/v1/booking/flight-orders', $data);
+
+    if ($response->failed()) {
+        throw new \Exception("Amadeus Booking Failed: " . $response->body());
+    }
+
+    return $response->json()['data'] ?? [];
 }
 
-// private function formatContactInfo(array $contact): array
-// {
-//     return [
-//         [
-//             'addresseeName' => [
-//                 'firstName' => $contact['firstName'],
-//                 'lastName' => $contact['lastName']
-//             ],
-//             'email' => $contact['email'],
-//             'phones' => [
-//                 [
-//                     'deviceType' => 'MOBILE',
-//                     'countryCallingCode' => $contact['countryCode'],
-//                     'number' => $contact['phone']
-//                 ]
-//             ]
-//         ]
-//     ];
-// }
-
-// private function formatTravelers(array $travelers): array
-// {
-//     return array_map(function ($traveler, $index) {
-//         return [
-//             'id' => $index + 1,
-//             'dateOfBirth' => $traveler['birthDate'],
-//             'name' => [
-//                 'firstName' => $traveler['firstName'],
-//                 'lastName' => $traveler['lastName']
-//             ],
-//             'gender' => strtoupper($traveler['gender']),
-//             'contact' => [
-//                 'email' => $traveler['email'],
-//                 'phones' => [
-//                     [
-//                         'deviceType' => 'MOBILE',
-//                         'countryCallingCode' => $traveler['countryCode'],
-//                         'number' => $traveler['phone']
-//                     ]
-//                 ]
-//             ],
-//             'documents' => [
-//                 [
-//                     'documentType' => 'PASSPORT',
-//                     'number' => $traveler['passportNumber'],
-//                     'issuanceDate' => $traveler['passportIssueDate'],
-//                     'expiryDate' => $traveler['passportExpiryDate'],
-//                     'issuanceCountry' => $traveler['passportCountry'],
-//                     'nationality' => $traveler['nationality']
-//                 ]
-//             ]
-//         ];
-//     }, $travelers, array_keys($travelers));
-// }
 
 
-public function cancelBooking(string $bookingId)
-    {
-        $token = $this->getAccessToken();
+public function cancelBooking(string $amadeusBookingId)
+{
+    $token = $this->getAccessToken();
 
-        $response = Http::withToken($token)
-            ->delete("https://test.api.amadeus.com/v1/booking/flight-orders/{$bookingId}");
+    $response = Http::withToken($token)
+        ->delete("https://test.api.amadeus.com/v1/booking/flight-orders/{$amadeusBookingId}");
 
-        if ($response->failed()) {
-            Log::error('Amadeus Cancel Booking Failed', [
-                'error' => $response->body(),
-                'bookingId' => $bookingId
-            ]);
-            throw new \Exception("Failed to cancel booking: " . ($response->json()['errors'][0]['detail'] ?? 'Unknown error'));
-        }
-
+    if ($response->successful()) {
         return true;
     }
 
+    throw new \Exception("Failed to cancel booking with Amadeus: " . $response->body());
+}
 
-    public function getBookingStatus(string $bookingId)
-    {
-        $token = $this->getAccessToken();
 
-        $response = Http::withToken($token)
-            ->get("https://test.api.amadeus.com/v1/booking/flight-orders/{$bookingId}");
 
-        if ($response->failed()) {
-            Log::error('Amadeus Booking Status Failed', [
-                'error' => $response->body(),
-                'bookingId' => $bookingId
-            ]);
-            throw new \Exception("Failed to get booking status: " . ($response->json()['errors'][0]['detail'] ?? 'Unknown error'));
-        }
 
-        return $response->json();
-    }
+// public function cancelBooking(string $bookingId)
+//     {
+//         $token = $this->getAccessToken();
+
+//         $response = Http::withToken($token)
+//             ->delete("https://test.api.amadeus.com/v1/booking/flight-orders/{$bookingId}");
+
+//         if ($response->failed()) {
+//             Log::error('Amadeus Cancel Booking Failed', [
+//                 'error' => $response->body(),
+//                 'bookingId' => $bookingId
+//             ]);
+//             throw new \Exception("Failed to cancel booking: " . ($response->json()['errors'][0]['detail'] ?? 'Unknown error'));
+//         }
+
+//         return true;
+//     }
+
+
+//     public function getBookingStatus(string $bookingId)
+//     {
+//         $token = $this->getAccessToken();
+
+//         $response = Http::withToken($token)
+//             ->get("https://test.api.amadeus.com/v1/booking/flight-orders/{$bookingId}");
+
+//         if ($response->failed()) {
+//             Log::error('Amadeus Booking Status Failed', [
+//                 'error' => $response->body(),
+//                 'bookingId' => $bookingId
+//             ]);
+//             throw new \Exception("Failed to get booking status: " . ($response->json()['errors'][0]['detail'] ?? 'Unknown error'));
+//         }
+
+//         return $response->json();
+//     }
 
 
 

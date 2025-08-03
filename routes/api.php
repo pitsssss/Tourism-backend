@@ -68,6 +68,10 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/flights', [FlightController::class, 'getFlights']);
     Route::post('/flights/price', [FlightController::class, 'price']);
+    //Route::post('/flights/passenger-info', [FlightController::class, 'storePassengerInfo']);
+
+
+    // Route::post('/stripe/webhook', [PaymentController::class, 'handleWebhook']);
 
 
 // Public endpoints for Stripe callbacks
@@ -98,18 +102,24 @@ Route::prefix('v1')->group(function () {
 /// 🔐 Protected API routes for authenticated users
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
+
+
+    Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
+    Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
+    Route::get('/user/bookings', [BookingController::class, 'getUserBookings']);
+    Route::delete('/flights/cancel-booking/{bookingId}', [FlightController::class, 'cancelBooking']);
      // ✅ Bookings
    // Payment Flow Endpoints
-   Route::prefix('payment')->group(function () {
-    Route::post('/create-session', [PaymentController::class, 'createCheckoutSession']);
-});
+//    Route::prefix('payment')->group(function () {
+//     Route::post('/create-session', [PaymentController::class, 'createCheckoutSession']);
+// });
 
 // Booking Management Endpoints
-Route::prefix('bookings')->group(function () {
-    Route::get('/{referenceNumber}', [PaymentController::class, 'getBookingDetails']); // Get booking by reference
-    Route::get('/{bookingId}/status', [PaymentController::class, 'getBookingStatus']); // Get Amadeus status
-    Route::delete('/{bookingId}', [PaymentController::class, 'cancelBooking']);        // Cancel booking
-});
+// Route::prefix('bookings')->group(function () {
+//     Route::get('/{referenceNumber}', [PaymentController::class, 'getBookingDetails']); // Get booking by reference
+//     Route::get('/{bookingId}/status', [PaymentController::class, 'getBookingStatus']); // Get Amadeus status
+//     Route::delete('/{bookingId}', [PaymentController::class, 'cancelBooking']);        // Cancel booking
+// });
 
 
      // ✅ Favorites

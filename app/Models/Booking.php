@@ -12,16 +12,14 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
     protected $fillable = [
+        'user_id',
         'amadeus_booking_id',
-        'reference_number',
+        'flight_offer_id',
+        'passenger_details',
         'flight_details',
-        'travelers',
-        'contact_info',
-        'payment_status',
-        'payment_amount',
-        'payment_currency',
-        'stripe_session_id',
-        'cancelled_at'
+        'payment_intent_id',
+        'amount',
+        'currency',
     ];
 
     protected $casts = [
