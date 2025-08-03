@@ -6,27 +6,40 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-{
-    Schema::create('bookings', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-      //  $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
-        $table->date('check_in');
-        $table->date('check_out');
-        $table->string('status')->default('pending'); // pending, confirmed, canceled
-        $table->timestamps();
-    });
-}
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function up()
     {
-        Schema::dropIfExists('booking');
+        Schema::create('bookings', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            // Amadeus Booking References
+            $table->string('amadeus_booking_id')->unique();
+            $table->string('reference_number')->unique();
+
+            // Flight Details (Stored as JSON)
+            $table->json('flight_details');
+
+            // Passenger Information
+            $table->json('travelers'); // Array of travelers
+            $table->json('contact_info'); // Primary contact info
+
+            // Payment Information
+            $table->string('payment_status')->default('pending'); // pending/paid/cancelled/refunded
+            $table->decimal('payment_amount', 10, 2);
+            $table->string('payment_currency')->default('USD');
+            $table->string('stripe_session_id')->nullable();
+
+            // Timestamps
+            $table->timestamp('cancelled_at')->nullable();
+            $table->timestamps();
+
+            // Indexes for faster queries
+            $table->index('payment_status');
+            $table->index('reference_number');
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('bookings');
     }
 };

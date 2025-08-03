@@ -18,7 +18,9 @@ use App\Http\Controllers\Api\{
     SearchController,
     NotificationController,
     ContactMessageController,
-    PlaceController
+    PlaceController,
+    PaymentController,
+    FlightController
 };
 
 use App\Http\Controllers\Admin\{
@@ -58,13 +60,24 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}/trips', [CategoryController::class, 'getTrips']);
-Route::get('/categories/{id}/trips', [TripsController::class, 'getTripsByCategory']);
-Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
-
-
-
-
+    Route::get('/categories/{id}/trips', [TripsController::class, 'getTripsByCategory']);
+    Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
     Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
+
+
+
+    Route::get('/flights', [FlightController::class, 'getFlights']);
+    Route::post('/flights/price', [FlightController::class, 'price']);
+
+
+// Public endpoints for Stripe callbacks
+// Route::get('/payment/success', [PaymentController::class, 'handleSuccess'])->name('payment.success');
+
+
+
+
+    // Route::get('/test-cache', [FlightController::class, 'testCache']);
+
 
 //     Route::get('/places', [PlaceController::class, 'index']);
 
@@ -86,8 +99,18 @@ Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
      // ✅ Bookings
-    // Route::get('/bookings', [BookingController::class, 'index']);
-    // Route::post('/bookings', [BookingController::class, 'store']);
+   // Payment Flow Endpoints
+   Route::prefix('payment')->group(function () {
+    Route::post('/create-session', [PaymentController::class, 'createCheckoutSession']);
+});
+
+// Booking Management Endpoints
+Route::prefix('bookings')->group(function () {
+    Route::get('/{referenceNumber}', [PaymentController::class, 'getBookingDetails']); // Get booking by reference
+    Route::get('/{bookingId}/status', [PaymentController::class, 'getBookingStatus']); // Get Amadeus status
+    Route::delete('/{bookingId}', [PaymentController::class, 'cancelBooking']);        // Cancel booking
+});
+
 
      // ✅ Favorites
     // Route::get('/favorites/{userId}', [FavoriteController::class, 'index']);
