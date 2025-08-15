@@ -122,6 +122,9 @@ Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController
 Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة
 
 
+Route::post('/trips/book', [TripsController::class, 'bookTrip']);
+Route::post('/trips/confirm-booking', [TripsController::class, 'confirmBooking']);
+
 Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
 Route::get('/user/bookings', [BookingController::class, 'getUserBookings']);

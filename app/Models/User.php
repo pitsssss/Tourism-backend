@@ -67,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ContactMessage::class);
     }
 
-    
+
 public function userTrips()
 {
     return $this->hasMany(user_trips::class);
@@ -78,4 +78,8 @@ public function favorites()
     return $this->hasMany(Favorite::class);
 }
 
+public function tripsbooking()
+{
+    return $this->hasMany(TripsBooking::class);
+}
 }

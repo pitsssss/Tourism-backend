@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
 {
-    Schema::create('bookings', function (Blueprint $table) {
+    Schema::create('flights_bookings', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         $table->string('flight_offer_id')->nullable();

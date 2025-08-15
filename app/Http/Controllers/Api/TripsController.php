@@ -8,6 +8,11 @@ use App\Models\Trip;
 use Illuminate\Http\Request;
 use App\Models\Activity;
 use App\Models\TourGuide;
+use Stripe\Stripe;
+use App\Models\TripsBooking;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+
 class TripsController extends Controller
 {
 
@@ -34,7 +39,7 @@ public function getTripDetails($id)
     $trip = Trip::with([
         'images:id,trip_id,image',
         'hotel:id,name',
-        'transportation:id,name', 
+        'transportation:id,name',
         'days:id,tripable_id,tripable_type,name,date',
         'days.activities:id,day_id,name,image,description',
         'days.activities.images:id,activity_id,image_path',
@@ -77,7 +82,7 @@ public function getTripDetails($id)
 
 public function showCategoryTripsSorted(Request $request, $categoryId)
 {
-    $query = Trip::where('category_id', $categoryId); 
+    $query = Trip::where('category_id', $categoryId);
 
     if ($request->has('sort_by')) {
         $sortField = $request->get('sort_by');
@@ -107,9 +112,66 @@ public function show_activity_details($id)
         'start_time' => $activity->start_time,
         'end_time' => $activity->end_time,
         'image' => $activity->image,
-        'gallery' => $activity->images->pluck('image_path'), 
+        'gallery' => $activity->images->pluck('image_path'),
     ]);
 }
+
+public function bookTrip(Request $request)
+    {
+        $request->validate([
+            'trip_id' => 'required|exists:trips,id',
+            'tickets_count' => 'required|integer|min:1|max:10',
+        ]);
+
+        $trip = Trip::findOrFail($request->trip_id);
+        $ticketsCount = $request->tickets_count;
+
+        $totalPrice = $trip->price * $ticketsCount;
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $paymentIntent = PaymentIntent::create([
+            'amount' => intval($totalPrice * 100),
+            'currency' => 'usd',
+        ]);
+
+        return response()->json([
+            'client_secret' => $paymentIntent->client_secret,
+            'total_price' => $totalPrice,
+        ]);
+    }
+
+
+    public function confirmBooking(Request $request)
+    {
+        $request->validate([
+            'trip_id' => 'required|exists:trips,id',
+            'tickets_count' => 'required|integer|min:1',
+            'payment_intent_id' => 'required|string'
+        ]);
+
+        $trip = Trip::findOrFail($request->trip_id);
+        $ticketsCount = $request->tickets_count;
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $payment = PaymentIntent::retrieve($request->payment_intent_id);
+
+        if ($payment->status !== 'succeeded') {
+            return response()->json(['message' => 'الدفع لم يتم بنجاح'], 400);
+        }
+
+        $booking = TripsBooking::create([
+            'trip_id' => $trip->id,
+            'user_id' => Auth::id(),
+            'tickets_count' => $ticketsCount,
+            'total_price' => $trip->price * $ticketsCount,
+            'status' => 'done',
+        ]);
+
+        return response()->json([
+            'message' => 'تم الحجز بنجاح',
+            'booking' => $booking
+        ]);
+    }
 
 
 }

@@ -143,7 +143,7 @@ public function __construct(AmadeusService $amadeusService)
     $paymentMethodId = $request->payment_method_id;
 
 
-    $alreadyBooked = Booking::where('user_id', Auth::id())
+    $alreadyBooked = FlightsBooking::where('user_id', Auth::id())
     ->where('flight_offer_id', $flightOfferId)
     ->exists();
 
@@ -184,7 +184,7 @@ if ($alreadyBooked) {
         $bookingResult = $this->amadeusService->createBooking($passengerData['passengers'], $flightOfferId);
 
         // خزن في قاعدة البيانات
-        $saved = Booking::create([
+        $saved = FlightsBooking::create([
             'user_id' => Auth::id(),
             'amadeus_booking_id' => $bookingResult['id'] ?? null,
             'flight_offer_id' => $flightOfferId,
@@ -229,7 +229,7 @@ if ($alreadyBooked) {
 public function cancelBooking(string $bookingId)
 {
     try {
-        $booking = Booking::where('user_id', Auth::id())
+        $booking = FlightsBooking::where('user_id', Auth::id())
             ->where('amadeus_booking_id', $bookingId)
             ->first();
 

@@ -19,7 +19,7 @@ class Trip extends Model
         'count_days',
         'governorate_id',
         'guide_id'
-        
+
 	];
 
     public function hotel() {
@@ -56,6 +56,11 @@ public function transportation()
 public function favorites()
 {
     return $this->morphMany(Favorite::class, 'favorable');
+}
+
+public function tripsbooking()
+ {
+    return $this->hasMany(TripsBooking::class);
 }
 
 }
