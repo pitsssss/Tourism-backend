@@ -24,8 +24,10 @@ use App\Http\Controllers\Api\{
     GovernoratesController,
     PrivateTripController,
     UserTripsController,
-    DayController
-   
+    DayController,
+    FlightController
+
+
 };
 
 use App\Http\Controllers\Admin\{
@@ -82,8 +84,10 @@ Route::get('/explore/places', [ExploreController::class, 'getAllPlaces']);
 
 Route::get('/governorates', [GovernoratesController::class, 'index']);
 
+Route::get('/flights', [FlightController::class, 'getFlights']);
+Route::post('/flights/price', [FlightController::class, 'price']);
 
-   
+
 
 //     Route::get('/places', [PlaceController::class, 'index']);
 
@@ -117,8 +121,13 @@ Route::get('/private-trip/{trip}/hotels', [PrivateTripController::class, 'getHot
 Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);//باقي الاماكن المرتبطة بالمحافظة
 Route::get('/transportations', [PrivateTripController::class, 'getTransportations']);//show all
 Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
-Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة 
+Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة
 
+
+Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
+Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
+Route::get('/user/bookings', [BookingController::class, 'getUserBookings']);
+Route::delete('/flights/cancel-booking/{bookingId}', [FlightController::class, 'cancelBooking']);
 
      // ✅ Bookings
     // Route::get('/bookings', [BookingController::class, 'index']);

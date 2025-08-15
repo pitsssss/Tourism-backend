@@ -6,27 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
 {
     Schema::create('bookings', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-      //  $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
-        $table->date('check_in');
-        $table->date('check_out');
-        $table->string('status')->default('pending'); // pending, confirmed, canceled
+        $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+        $table->string('flight_offer_id')->nullable();
+        $table->string('amadeus_booking_id')->nullable();
+        $table->json('passenger_details');
+        $table->json('flight_details');
+        $table->string('payment_intent_id');
+        $table->decimal('amount', 10, 2);
+        $table->string('currency', 3)->default('USD');
+        $table->string('status')->default('done');
         $table->timestamps();
     });
 }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+
+    public function down()
     {
-        Schema::dropIfExists('booking');
+        Schema::dropIfExists('bookings');
     }
 };
