@@ -32,6 +32,17 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+          User::updateOrCreate(
+            ['email' => 'tour@gmail.com'], // حتى ما ينعاد كل مرة
+            [
+                'name' => ' Admintour',
+                'password' => Hash::make('12345678'), // غيريها لكلمة سر أقوى
+               'role' => 'admin_tour_guides',
+                'is_verified' => true,
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 

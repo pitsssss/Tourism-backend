@@ -35,6 +35,17 @@
                     <p><span class="font-bold text-blue-600">Days:</span> {{ $trip->count_days }}</p>
                     <p><span class="font-bold text-blue-600">Price:</span> ${{ $trip->price }}</p>
                     <p><span class="font-bold text-blue-600">Description:</span> {{ $trip->description }}</p>
+                    <p><span class="font-bold text-blue-600">start_date:</span> {{ $trip->start_date }}</p>
+                    <p><span class="font-bold text-blue-600">count_days:</span> {{ $trip->count_days }}</p>
+                    <p><span class="font-bold text-blue-600">Tour Guide:</span> {{ $trip->tourGuide?->name ?? '—' }}</p>
+
+@if($trip->tourGuide?->image)
+    <img src="{{ asset('imgs/guides.img/' . $trip->tourGuide->image) }}" alt="{{ $trip->tourGuide->name }}" class="w-16 h-16 rounded-full mt-1">
+@endif
+
+
+   
+
 
                     {{-- ✅ الصور الإضافية --}}
                     @if($trip->images->count())

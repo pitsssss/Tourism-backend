@@ -33,7 +33,7 @@
                 </table>
 
                 <div class="mt-6 text-right">
-                    <a href="{{ route('dashboard') }}" class="text-blue-700 hover:underline">
+                    <a href="{{ route('super_admin.dashboard') }}" class="text-blue-700 hover:underline">
                         رجوع إلى لوحة التحكم
                     </a>
                 </div>

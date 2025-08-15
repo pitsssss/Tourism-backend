@@ -44,6 +44,17 @@
             </select>
         </div>
 
+  {{-- Tour Guide --}}
+        <div>
+    <label class="block text-blue-600 mb-1">Tour Guide</label>
+    <select name="guide_id" class="w-full border border-blue-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+        <option value="">-- Select Tour Guide --</option>
+        @foreach ($tourGuides as $guide)
+            <option value="{{ $guide->id }}">{{ $guide->name }}</option>
+        @endforeach
+    </select>
+</div>
+
         {{-- Transport --}}
         <div>
             <label class="block text-blue-600 mb-1">Transport</label>

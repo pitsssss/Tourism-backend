@@ -20,10 +20,11 @@ class TripsSeeder extends Seeder
             'description' => 'Ancient city in the desert',
             'image' => 'imgs\categories.img\تنزيل.jpg',
             'category_id' => 1,
-            'transport' => 'Bus',
+            //'transport' => 'Bus',
             'price' => 500,
             'hotel_id' => 1,
             'count_days' => 4,
+             'governorate_id' => 1,
             'guide_id'=> 1
         ]);
 
@@ -32,10 +33,11 @@ class TripsSeeder extends Seeder
             'name' => ' To Lattakia',
             'description' => 'best beach in the country',
             'category_id' => 2,
-            'transport' => 'Bus',
+           // 'transport' => 'Bus',
             'price' => 300,
             'hotel_id' => 2,
             'count_days' => 4,
+             'governorate_id' => 1,
               'guide_id'=> 1
         ]);
     
@@ -43,7 +45,7 @@ class TripsSeeder extends Seeder
 Trip::create(
     [
     'name' => 'Trip to Palmyra',
-    'transport' => 'Bus',
+   // 'transport' => 'Bus',
     'description' => 'Explore the ancient ruins of Palmyra.',
     'start_date' => ('5/5/2024'),
     'image' => 'imgs\trips.img\تنزيل.jpg',
@@ -51,6 +53,7 @@ Trip::create(
     'category_id' => 1, 
     'price' => 150000,
     'count_days' => 3,
+    'governorate_id' => 1,
       'guide_id'=> 1,
     'created_at' => now(),
     'updated_at' => now(),

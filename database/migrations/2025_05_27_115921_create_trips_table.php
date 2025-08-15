@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('transport');
+            //$table->string('transport');
             $table->text('description');
             $table->text('start_date')->nullable(); 
             $table->string('image')->nullable();
@@ -23,7 +23,8 @@ return new class extends Migration
             $table->double('price')->nullable();
             $table->integer('count_days');
             $table->foreignId('governorate_id')->nullable()->constrained('governorates') ->onDelete('set null');
-            $table->unsignedBigInteger('guide_id')->constrained('guides')->onDelete('set null');
+            $table->unsignedBigInteger('guide_id')->constrained('tour_guides')->onDelete('set null');
+             $table->foreignId('transportation_id')->nullable()->constrained('transportations')->nullOnDelete();
             $table->timestamps();
         });
     }

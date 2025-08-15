@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder {
              HotelSeeder::class,
              RestaurantSeeder::class,
              PlacesSeeder::class,
-             GuideSeeder::class
+             GuideSeeder::class,
+              TransportationSeeder::class,
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,

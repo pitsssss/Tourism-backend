@@ -14,7 +14,7 @@ class TripsController extends Controller
 
     public function getAllTrips()
 {
-      $trips = Trip::with('guide:id,name,phone,rating,image')
+      $trips = Trip::with('TourGuide:id,name,phone,rating,image')
                 ->select('id', 'image', 'name', 'price', 'description', 'start_date', 'guide_id')
                 ->get();
     return response()->json($trips);
@@ -23,7 +23,7 @@ class TripsController extends Controller
    
     public function show($id)
    {
-    $trip = Trip::with('guide:id,name,phone,rating,image')->findOrFail($id); 
+    $trip = Trip::with('TourGuide:id,name,phone,rating,image')->findOrFail($id); 
     return new TripsResource($trip);
 }
     // public function search(Request $request)

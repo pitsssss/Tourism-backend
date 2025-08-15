@@ -44,6 +44,7 @@
                                 <option value="admin_hotels">Admin Hotels</option>
                                 <option value="admin_restaurants">Admin Restaurants</option>
                                 <option value="admin_places">Admin Places</option>
+                                <option value="admin_tour_guides">Admin Tour Guides</option>
                             </select>
                         </div>
                     </div>

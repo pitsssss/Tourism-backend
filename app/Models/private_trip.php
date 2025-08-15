@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class private_trip extends Model
 {
-    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start'];
+    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start','transportation_id'];
 
     public function governorate()
     {
@@ -21,5 +21,10 @@ class private_trip extends Model
 {
     return $this->morphMany(Day::class, 'tripable');
 }
+public function transportations()
+{
+    return $this->belongsTo(Transportations::class);
+}
+
 
 }

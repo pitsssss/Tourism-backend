@@ -12,7 +12,7 @@ class SuperAdminController extends Controller
    public function index()
 {
     $admins = User::whereIn('role', [
-        'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places'
+        'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places','admin_tour_guides'
     ])->get();
 
     return view('super_admin.dashboard', compact('admins'));
@@ -24,7 +24,7 @@ public function store(Request $request)
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|string|min:6',
-        'role' => 'required|in:admin_users,admin_trips,admin_hotels,admin_restaurants,admin_places',
+        'role' => 'required|in:admin_users,admin_trips,admin_hotels,admin_restaurants,admin_places,admin_tour_guides',
     ]);
 
     User::create([
@@ -41,7 +41,7 @@ public function store(Request $request)
 public function admins()
 {
     $admins = User::whereIn('role', [
-        'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places'
+        'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places','admin_tour_guides'
     ])->get();
 
     return view('super_admin.admins', compact('admins'));

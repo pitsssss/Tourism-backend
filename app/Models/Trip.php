@@ -43,9 +43,14 @@ public function days()
     return $this->morphMany(Day::class, 'tripable');
 }
 
-public function guide()
+public function TourGuide()
 {
     return $this->belongsTo(TourGuide::class, 'guide_id');
+}
+
+public function transportations()
+{
+    return $this->belongsTo(Transportations::class);
 }
 
 }

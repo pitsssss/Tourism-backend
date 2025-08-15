@@ -3,10 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminUsersController;
+use App\Http\Controllers\Admin\AdminTripController;
+use App\Http\Controllers\Admin\AdminTourGuidesController;
 use App\Http\Middleware\Admin as AdminMiddleware;
 use App\Http\Middleware\AdminUsersMiddleware;
 use App\Http\Middleware\AdminTripsMiddleware;
-use App\Http\Controllers\Admin\AdminTripController;
+use App\Http\Middleware\AdminTourGuidesMiddleware;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +46,16 @@ Route::middleware(['auth', AdminTripsMiddleware::class])->group(function () {
     Route::put('/{trip}', [AdminTripController::class, 'update'])->name('update');
     Route::delete('/{trip}', [AdminTripController::class, 'destroy'])->name('destroy');
    
+});
+
+
+Route::middleware(['auth', AdminTourGuidesMiddleware::class])->group(function () {
+    Route::get('/admin-tour-guides', [AdminTourGuidesController::class, 'index'])->name('admin_tour_guides.index');
+    Route::get('/admin-tour-guides/create', [AdminTourGuidesController::class, 'create'])->name('admin_tour_guides.create');
+    Route::post('/admin-tour-guides', [AdminTourGuidesController::class, 'store'])->name('admin_tour_guides.store');
+    Route::get('/admin-tour-guides/{tourGuide}/edit', [AdminTourGuidesController::class, 'edit'])->name('admin_tour_guides.edit');
+    Route::put('/admin-tour-guides/{tourGuide}', [AdminTourGuidesController::class, 'update'])->name('admin_tour_guides.update');
+    Route::delete('/admin-tour-guides/{tourGuide}', [AdminTourGuidesController::class, 'destroy'])->name('admin_tour_guides.destroy');
 });
 
 

@@ -9,6 +9,8 @@ use App\Models\Hotel;
 use App\Models\Category;
 use App\Models\governorates;
 use App\Models\TripImage;
+use App\Models\TourGuide;
+
 
 
 
@@ -16,7 +18,7 @@ class AdminTripController extends Controller
 {
       public function dashboard()
     {
-        $trips = Trip::with(['governorate', 'hotel', 'category'])->get();
+        $trips = Trip::with(['governorate', 'hotel', 'category','TourGuide'])->get();
         return view('admin_trips.dashboard', compact('trips'));
         
 
@@ -36,6 +38,7 @@ class AdminTripController extends Controller
             'governorate_id' => 'nullable|exists:governorates,id',
             'price' => 'nullable|numeric',
             'count_days' => 'required|integer|min:1',
+            'guide_id' => 'nullable|exists:tour_guides,id',
         ]);
 
      $mainImage = null;
@@ -54,8 +57,11 @@ if ($request->hasFile('image')) {
             'hotel_id' => $request->hotel_id,
             'category_id' => $request->category_id,
             'governorate_id' => $request->governorate_id,
+            'guide_id' => $request->guide_id,
             'price' => $request->price,
             'count_days' => $request->count_days,
+            
+            
         ]);
 
         //حفظ الصور الإضافية  
@@ -81,8 +87,9 @@ public function create()
         $hotels = Hotel::all();
         $categories = Category::all();
         $governorates = governorates::all();
+        $tourGuides = TourGuide::all();
 
-        return view('admin_trips.create', compact('hotels', 'categories', 'governorates'));
+        return view('admin_trips.create', compact('hotels', 'categories', 'governorates','tourGuides'));
     }
 
 }

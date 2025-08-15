@@ -114,7 +114,10 @@ Route::post('/book-trip', [UserTripsController::class, 'bookTrip']);
 Route::get('/user-trips/upcoming', [UserTripsController::class, 'upcomingTrips']);//all trip upcoming
 Route::post('/private-trips/{trip}/days', [DayController::class, 'store']);//add day to private trip
 Route::get('/private-trip/{trip}/hotels', [PrivateTripController::class, 'getHotels']);//get hotel by governorates
-Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);
+Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);//باقي الاماكن المرتبطة بالمحافظة
+Route::get('/transportations', [PrivateTripController::class, 'getTransportations']);//show all
+Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
+Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة 
 
 
      // ✅ Bookings
@@ -144,7 +147,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
 
     Route::apiResource('/users', AdminUserController::class);
-    Route::apiResource('/trips', AdminTripsController::class);
+    //Route::apiResource('/trips', AdminTripsController::class);
     Route::apiResource('/hotels', AdminHotelController::class);
     Route::apiResource('/restaurants', AdminRestaurantController::class);
     Route::apiResource('/categories', AdminCategoryController::class);

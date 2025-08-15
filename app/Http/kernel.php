@@ -49,6 +49,7 @@ class Kernel extends HttpKernel
          'admin' => \App\Http\Middleware\Admin::class,
         'admin_users' => \App\Http\Middleware\AdminUsersMiddleware::class,
         'admin_trips' => \App\Http\Middleware\AdminTripsMiddleware::class,
+        'admin_tour_guides' => \App\Http\Middleware\AdminTourGuidesMiddleware::class,
 
  
 

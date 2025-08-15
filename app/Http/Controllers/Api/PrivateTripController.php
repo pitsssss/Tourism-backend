@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\private_trip;
+use App\Models\Transportations;
 use Illuminate\Http\Request;
 
 
@@ -114,5 +115,23 @@ class PrivateTripController extends Controller
             'places'      => $places->isNotEmpty()      ? $places      : 'لا توجد أماكن سياحية حالياً.',
         ]);
     }
+
+    public function getTransportations()
+{
+    return response()->json(Transportations::all());
+}
+
+public function chooseTransportation(Request $request, Private_trip $privateTrip)
+{
+    $request->validate([
+        'transportation_id' => 'required|exists:transportations,id',
+    ]);
+
+    $privateTrip->update([
+        'transportation_id' => $request->transportation_id,
+    ]);
+
+    return response()->json(['message' => 'Transportation selected successfully']);
+}
 
 }

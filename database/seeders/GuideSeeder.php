@@ -24,7 +24,7 @@ class GuideSeeder extends Seeder
                 'name' => 'ليلى العلي',
                 'phone' => '0988776655',
                 'rating' => 4.8,
-                'image' => 'guides/layla.jpg',
+                'image' => 'imgs\guides.img\دليل سياحي.jpg',
             ],
             [
                 'name' => 'مازن توفيق',
