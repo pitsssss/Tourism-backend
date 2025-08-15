@@ -48,9 +48,14 @@ public function TourGuide()
     return $this->belongsTo(TourGuide::class, 'guide_id');
 }
 
-public function transportations()
+public function transportation()
 {
-    return $this->belongsTo(Transportations::class);
+    return $this->belongsTo(Transportation::class);
+}
+
+public function favorites()
+{
+    return $this->morphMany(Favorite::class, 'favorable');
 }
 
 }

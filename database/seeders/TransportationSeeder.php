@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Transportations;
+use App\Models\Transportation;
 
 class TransportationSeeder extends Seeder
 {
@@ -45,7 +45,7 @@ class TransportationSeeder extends Seeder
         ];
 
         foreach ($transportations as $transportation) {
-            Transportations::create($transportation);
+            Transportation::create($transportation);
         }
     }
 }

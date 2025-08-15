@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder {
              UserSeeder::class,
              CategorySeeder::class,
               GovernoratesSeeder::class,
+                TransportationSeeder::class,
              TripsSeeder::class,
              DaySeeder::class,
              ActivitySeeder::class,
@@ -32,7 +33,7 @@ class DatabaseSeeder extends Seeder {
              RestaurantSeeder::class,
              PlacesSeeder::class,
              GuideSeeder::class,
-              TransportationSeeder::class,
+            
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,

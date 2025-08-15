@@ -61,25 +61,23 @@ Route::prefix('v1')->group(function () {
 
 
 
-//     // ✅ View trips, Hotels, Restaurants, Categories
-    Route::get('/Alltrips', [TripsController::class, 'getAllTrips']);
-    Route::get('/trips/{id}', [TripsController::class, 'show']);
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}/trips', [CategoryController::class, 'getTrips']);
-
-
-
+// ✅ View trips, Hotels, Restaurants, Categories
+Route::get('/Alltrips', [TripsController::class, 'getAllTrips']);//show all trip
+// Route::get('/trips/{id}', [TripsController::class, 'show']);
+Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);//TripDetails
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}/trips', [CategoryController::class, 'getTrips']);
 Route::get('/categories/{id}/trips', [TripsController::class, 'getTripsByCategory']);
-Route::get('/trips/{id}', [TripsController::class, 'getTripDetails']);
 Route::get('/trips/category/{categoryId}', [TripsController::class, 'showCategoryTripsSorted']);//new
  Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
 Route::get('/activity_details/{activityId}', [TripsController::class, 'show_activity_details']);//new
+Route::get('/hotels/{id}', [HotelController::class, 'show']);//hotel_details
 /////Explor
 Route::get('/explore/hotels', [ExploreController::class, 'getAllHotels']);
 Route::get('/explore/restaurants', [ExploreController::class, 'getAllRestaurants']);
 Route::get('/explore/activities', [ExploreController::class, 'getAllActivities']);
 Route::get('/explore/places', [ExploreController::class, 'getAllPlaces']);
-
+Route::get('/explore/search', [ExploreController::class, 'search']);
 
 
 Route::get('/governorates', [GovernoratesController::class, 'index']);
@@ -128,6 +126,11 @@ Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassen
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
 Route::get('/user/bookings', [BookingController::class, 'getUserBookings']);
 Route::delete('/flights/cancel-booking/{bookingId}', [FlightController::class, 'cancelBooking']);
+
+
+Route::post('/favorites/add', [FavoriteController::class, 'add']);//add_to_favourite
+Route::post('/favorites/remove', [FavoriteController::class, 'remove']);//delete_from_favorite
+Route::get('/favorites', [FavoriteController::class, 'index']);
 
      // ✅ Bookings
     // Route::get('/bookings', [BookingController::class, 'index']);

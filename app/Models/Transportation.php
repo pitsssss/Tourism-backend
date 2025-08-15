@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Transportations extends Model
+class Transportation extends Model
 {
   protected $fillable = ['name', 'image', 'price_per_day', 'rating', 'capacity'];
 

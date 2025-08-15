@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('address');
+           // $table->string('address');
             // $table->decimal('price', 8, 2)->nullable();
             $table->float('rating')->nullable();
             $table->string('image')->nullable();
             $table->string('location');
+              $table->json('extra_images')->nullable();
+              $table->json('facilities')->nullable();
             $table->string('phone_number')->nullable();
            // $table->foreignId('category_id')->onDelete('cascade');
             $table->foreignId('governorate_id')->constrained()->onDelete('cascade');

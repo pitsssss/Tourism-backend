@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Hotel extends Model {
-    protected $guard=[];
-    // protected $fillable = [
-    //     'name', 'description', 'address', 'price', 'rating', 'image', 'location', 'phone_number'
-    // ];
 
-    // public function destination() {
-    //     return $this->belongsTo(Destination::class);
-    // }
+class Hotel extends Model {
+    
+     protected $fillable = [
+         'name', 'description', 'rating', 'image', 'location', 'phone_number','governorate_id','extra_images','facilities'
+     ];
+     protected $casts = [
+        'extra_images' => 'array',
+        'facilities' => 'array',
+    ];
 
     public function category() {
         return $this->belongsTo(Category::class);
@@ -26,13 +27,15 @@ class Hotel extends Model {
 {
     return $this->morphMany(Review::class, 'reviewable');
 }
-    public function favorites() {
-        return $this->hasMany(Favorite::class);
-    }
-
-public function hotels()
+   
+public function governorate()
 {
-    return $this->hasMany(Hotel::class, 'governorate_id');
+    return $this->belongsTo(Governorates::class);
+}
+
+public function favorites()
+{
+    return $this->morphMany(Favorite::class, 'favorable');
 }
 
 }

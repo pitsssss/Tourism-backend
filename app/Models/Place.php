@@ -18,5 +18,9 @@ class Place extends Model
         return $this->belongsTo(governorates::class,'governorate_id');
     }
 
+public function favorites()
+{
+    return $this->morphMany(Favorite::class, 'favorable');
+}
 
 }

@@ -13,7 +13,9 @@ class HotelController extends Controller
     }
 
     public function show($id)
-    {
-        return Hotel::findOrFail($id);
-    }
+{
+    $hotel = Hotel::findOrFail($id);
+    return response()->json($hotel);
+}
+
 }

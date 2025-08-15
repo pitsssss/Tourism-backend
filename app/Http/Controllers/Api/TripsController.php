@@ -12,31 +12,43 @@ class TripsController extends Controller
 {
 
 
-    public function getAllTrips()
+  public function getAllTrips()
 {
-      $trips = Trip::with('TourGuide:id,name,phone,rating,image')
-                ->select('id', 'image', 'name', 'price', 'description', 'start_date', 'guide_id')
-                ->get();
+      $trips = Trip::select('id', 'image', 'name', 'description', 'price', 'start_date')
+            ->get();
     return response()->json($trips);
 }
 
-   
-    public function show($id)
-   {
-    $trip = Trip::with('TourGuide:id,name,phone,rating,image')->findOrFail($id); 
-    return new TripsResource($trip);
+
+public function getTripsByCategory($categoryId)
+{
+   $trips = Trip::where('category_id', $categoryId)
+                    ->select('id', 'name', 'image', 'price', 'start_date', 'description')
+                    ->get();
+
+
+    return response()->json($trips);
 }
-    // public function search(Request $request)
-    // {
-    //     $keyword = $request->input('keyword');
+public function getTripDetails($id)
+{
+    $trip = Trip::with([
+        'images:id,trip_id,image',
+        'hotel:id,name',
+        'transportation:id,name', 
+        'days:id,tripable_id,tripable_type,name,date',
+        'days.activities:id,day_id,name,image,description',
+        'days.activities.images:id,activity_id,image_path',
+        'tourGuide:id,name,image,phone,rating',
+    ])
+    ->select('id', 'image', 'name', 'price', 'start_date', 'hotel_id', 'transportation_id', 'guide_id', 'description')
+    ->findOrFail($id);
 
-    //     $results = Trips::where('name', 'like', "%$keyword%")
-    //         ->orWhere('location', 'like', "%$keyword%")
-    //         ->get();
+    $tripArray = $trip->toArray();
 
-    //     return response()->json($results);
-    // }
+    $tripArray['transportation'] = $trip->transportation->name ?? null;
 
+    return response()->json($tripArray);
+}
     public function showTripsSorted(Request $request)
 {
     $query = Trip::query();
@@ -56,70 +68,11 @@ class TripsController extends Controller
         }
     }
 
-    $trips = $query->with('category','guide')->get();
+    $trips = $query->with('category')->get();
 
     return response()->json($trips);
 }
 
-public function getTripsByCategory($categoryId)
-{
-   $trips = Trip::where('category_id', $categoryId)
-                    ->with('guide:id,name,phone,rating,image')
-                    ->select('id', 'name', 'image', 'price', 'start_date', 'description', 'guide_id')
-                    ->get();
-
-
-    return response()->json($trips);
-}
-
-
-public function getTripDetails($id)
-{
-    $trip = Trip::with([
-        'images',
-        'hotel:id,name',
-        'days.activities',
-         'guide',
-    ])->findOrFail($id);
-
-    $result = [
-        'id' => $trip->id,
-        'name' => $trip->name,
-        'transport' => $trip->transport,
-        'price' => $trip->price,
-        'start_date' => $trip->start_date,
-        'count_days' => $trip->count_days,
-        'hotel_name' => $trip->hotel->name ?? null,
-        'images' => $trip->images->pluck('image'),
-
- 'tour_guide' => $trip->guide  ? [
-            'name' => $trip->guide->name,
-            'phone' => $trip->guide->phone,
-            'rating' => $trip->guide->rating,
-            'image' => $trip->guide->image,
-        ] : null,
-
-        'days' => $trip->days->map(function ($day) {
-            return [
-                'id' => $day->id,
-                'name' => $day->name,
-                'date' => $day->date,
-                'activities' => $day->activities->map(function ($activity) {
-                    return [
-                        'id' => $activity->id,
-                        'name' => $activity->name,
-                        'start_time' => $activity->start_time,
-                        'end_time' => $activity->end_time,
-                        'description' => $activity->description,
-                        'image' => $activity->image,
-                    ];
-                }),
-            ];
-        }),
-    ];
-
-    return response()->json($result);
-}
 
 
 public function showCategoryTripsSorted(Request $request, $categoryId)
@@ -139,7 +92,7 @@ public function showCategoryTripsSorted(Request $request, $categoryId)
         }
     }
 
-    $trips = $query->with('category','guide')->get();
+    $trips = $query->with('category')->get();
 
     return response()->json($trips);
 }
@@ -153,7 +106,7 @@ public function show_activity_details($id)
         'description' => $activity->description,
         'start_time' => $activity->start_time,
         'end_time' => $activity->end_time,
-        'main_image' => $activity->image,
+        'image' => $activity->image,
         'gallery' => $activity->images->pluck('image_path'), 
     ]);
 }

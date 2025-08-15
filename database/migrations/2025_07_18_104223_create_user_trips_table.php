@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('trip_id')->nullable()->constrained('trips')->onDelete('set null'); 
         $table->unsignedBigInteger('private_trip_id')->nullable();
-
-
         $table->enum('type', ['ready', 'custom']);
         $table->foreignId('governorate_id')->nullable()->constrained('governorates')->onDelete('set null');
         $table->enum('status', ['upcoming', 'in_progress', 'finished'])->default('upcoming');

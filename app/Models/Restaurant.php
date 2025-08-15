@@ -19,12 +19,14 @@ class Restaurant extends Model
     return $this->morphMany(Review::class, 'reviewable');
 }
 
-    public function favorites() {
-        return $this->hasMany(Favorite::class);
-    }
+    
       public function governorate()
     {
         return $this->belongsTo(governorates::class,'governorate_id');
     }
+public function favorites()
+{
+    return $this->morphMany(Favorite::class, 'favorable');
+}
 
 }

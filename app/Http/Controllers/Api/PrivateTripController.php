@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\private_trip;
-use App\Models\Transportations;
+use App\Models\Transportation;
 use Illuminate\Http\Request;
 
 
@@ -118,7 +118,7 @@ class PrivateTripController extends Controller
 
     public function getTransportations()
 {
-    return response()->json(Transportations::all());
+    return response()->json(Transportation::all());
 }
 
 public function chooseTransportation(Request $request, Private_trip $privateTrip)
