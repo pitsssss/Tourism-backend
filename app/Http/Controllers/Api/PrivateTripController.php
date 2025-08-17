@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\private_trip;
 use App\Models\Transportation;
 use Illuminate\Http\Request;
-
+use App\Models\TourGuide;
+use App\Models\Hotel_Room;
+use App\Models\Day;
 
 class PrivateTripController extends Controller
 {
@@ -133,5 +135,91 @@ public function chooseTransportation(Request $request, Private_trip $privateTrip
 
     return response()->json(['message' => 'Transportation selected successfully']);
 }
+
+public function getTourGuides()
+{
+    $guides = TourGuide::select('id', 'name', 'phone', 'rating', 'image')->get();
+
+    $guides->prepend([
+        'id' => null,
+        'name' => 'بدون دليل سياحي',
+        'phone' => null,
+        'rating' => null,
+        'image' => null,
+    ]);
+
+    return response()->json($guides);
+}
+
+public function chooseTourGuide(Request $request, Private_trip $privateTrip)
+{
+    $request->validate([
+        'tour_guide_id' => 'nullable|exists:tour_guides,id', 
+    ]);
+
+    $privateTrip->update([
+        'tour_guide_id' => $request->tour_guide_id, 
+    ]);
+
+    return response()->json(['message' => 'Tour guide selected successfully']);
+}
+
+ public function chooseRoom(Request $request, Private_trip $privateTrip)
+    {
+        $request->validate([
+            'hotel_room_id' => 'required|exists:hotel__rooms,id',
+        ]);
+
+        $room = Hotel_Room::findOrFail($request->hotel_room_id);
+
+        if ($room->available_rooms < 1) {
+            return response()->json(['message' => 'No available rooms'], 400);
+        }
+        
+        $privateTrip->update([
+            'hotel_room_id' => $room->id
+        ]);
+
+        return response()->json([
+            'message' => 'Room selected successfully',
+            'private_trip' => $privateTrip
+        ]);
+    }
+
+     public function showDay($dayId)
+    {
+        $day = Day::with([
+            'activities:id,name,start_time,end_time,description,image',
+            'places:id,name,location,description,image',
+            'restaurants:id,name,location,phone_number,rating,image'
+        ])->findOrFail($dayId);
+
+        return response()->json($day);
+    }
+
+    // إضافة عنصر جديد (Activity / Place / Restaurant) إلى يوم محدد
+    public function addElement(Request $request, $dayId)
+    {
+        $day = Day::findOrFail($dayId);
+
+        $request->validate([
+            'type' => 'required|in:activity,place,restaurant',
+            'element_id' => 'required|integer'
+        ]);
+
+        switch ($request->type) {
+            case 'activity':
+                $day->activities()->attach($request->element_id);
+                break;
+            case 'place':
+                $day->places()->attach($request->element_id);
+                break;
+            case 'restaurant':
+                $day->restaurants()->attach($request->element_id);
+                break;
+        }
+
+        return response()->json(['message' => 'تم إضافة العنصر إلى اليوم بنجاح']);
+    }
 
 }

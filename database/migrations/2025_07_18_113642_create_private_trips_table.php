@@ -17,6 +17,8 @@ return new class extends Migration
            $table->foreignId('governorate_id')->constrained()->onDelete('cascade');
            $table->date('trip_date_start');
            $table->foreignId('transportation_id')->nullable()->constrained('transportations') ->nullOnDelete();
+           $table->foreignId('tour_guide_id')->nullable()->constrained('tour_guides')->nullOnDelete();
+           $table->foreignId('hotel_room_id')->nullable()->constrained('hotel__rooms')->nullOnDelete();
            $table->timestamps();
         });
     }

@@ -1,23 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-blue-900 leading-tight">
-            لوحة تحكم ال أدمن – إضافة أدمن جديد
+            لوحة تحكم الأدمن – إضافة أدمن جديد
         </h2>
-         <div class="mb-6 text-right">
+    
+
+    <div class="py-10 min-h-screen bg-gradient-to-r from-blue-100 to-blue-300">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+
+            <!-- زر الانتقال لعرض الأدمنز -->
+            <div class="mb-6 text-right">
                 <a href="{{ route('super_admin.admins') }}" class="inline-block bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">
                     عرض الأدمنز
                 </a>
             </div>
-    
-
-    <div class="py-10 bg-blue-50 min-h-screen">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-
-            <!-- زر الانتقال لعرض الأدمنز -->
-           
 
             <!-- نموذج الإضافة -->
-            <div class="bg-white shadow-xl rounded-xl p-6">
+            <div class="bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-6">
                 <h3 class="text-lg font-bold text-blue-800 mb-4">إضافة أدمن جديد:</h3>
                 <form action="{{ route('super_admin.store') }}" method="POST">
                     @csrf
@@ -48,12 +47,13 @@
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
+                    <button type="submit" class="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                         إضافة
                     </button>
                 </form>
-                
             </div>
+
         </div>
     </div>
     </x-slot>

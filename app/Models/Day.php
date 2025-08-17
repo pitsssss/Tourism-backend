@@ -12,19 +12,23 @@ class Day extends Model
     {
         return $this->belongsTo(Trip::class);
     }
-    // public function avtivity()
-    // {
-    //     return $this->hasMany(Activity::class);
-    // }
 
-    public function activities()
+  public function activities()
 {
-    return $this->hasMany(Activity::class);
+    return $this->belongsToMany(Activity::class, 'day_activities');
 }
 public function tripable()
 {
     return $this->morphTo();
 }
+public function places()
+{
+    return $this->belongsToMany(Place::class, 'day_places');
+}
 
+public function restaurants()
+{
+    return $this->belongsToMany(Restaurant::class, 'day_restaurants');
+}
 
 }

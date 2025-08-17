@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Restaurant extends Model
 {
-    // public function destination() {
-    //     return $this->belongsTo(Destination::class);
-    // }
+        protected $fillable = ['name', 'description', 'location', 'phone_number', 'rating', 'image', 'governorate_id'];
 
     public function category() {
         return $this->belongsTo(Category::class);
@@ -29,4 +27,8 @@ public function favorites()
     return $this->morphMany(Favorite::class, 'favorable');
 }
 
+ public function days()
+    {
+        return $this->belongsToMany(Day::class, 'day_restaurant');
+    }
 }

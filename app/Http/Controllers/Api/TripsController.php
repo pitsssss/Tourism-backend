@@ -35,10 +35,11 @@ public function getTripDetails($id)
         'images:id,trip_id,image',
         'hotel:id,name',
         'transportation:id,name', 
-        'days:id,tripable_id,tripable_type,name,date',
-        'days.activities:id,day_id,name,image,description',
-        'days.activities.images:id,activity_id,image_path',
         'tourGuide:id,name,image,phone,rating',
+         'days:id,tripable_id,tripable_type,name,date',
+        'days.activities:id,name,start_time,end_time,description,image',
+        'days.places:id,name,location,description,image',
+        'days.restaurants:id,name,description,location,phone_number,rating,image',
     ])
     ->select('id', 'image', 'name', 'price', 'start_date', 'hotel_id', 'transportation_id', 'guide_id', 'description')
     ->findOrFail($id);

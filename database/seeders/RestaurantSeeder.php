@@ -12,7 +12,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Al Khawali Restaurant',
                 'description' => 'Traditional Syrian food in the heart of Damascus.',
-                'cuisine_type' => 'Syrian',
+                
                 'location' => 'Old Damascus',
                 'phone_number' => '011-2233445',
                 'rating' => 4.7,
@@ -24,7 +24,7 @@ class RestaurantSeeder extends Seeder
             [
                 'name' => 'Ocean Fish House',
                 'description' => 'Fresh seafood dishes with a Mediterranean twist.',
-                'cuisine_type' => 'Seafood',
+                
                 'location' => 'Lattakia',
                 'phone_number' => '041-5566778',
                 'rating' => 4.5,

@@ -38,4 +38,8 @@ public function favorites()
     return $this->morphMany(Favorite::class, 'favorable');
 }
 
+ public function rooms()
+    {
+        return $this->hasMany(Hotel_Room::class);
+    }
 }

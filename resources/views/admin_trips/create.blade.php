@@ -56,10 +56,16 @@
 </div>
 
         {{-- Transport --}}
-        <div>
-            <label class="block text-blue-600 mb-1">Transport</label>
-            <input type="text" name="transport" class="w-full border border-blue-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
-        </div>
+       <div>
+    <label class="block text-blue-600 mb-1">Transport</label>
+    <select name="transport" class="w-full border border-blue-300 p-2 rounded focus:ring-2 focus:ring-blue-500">
+        <option value="">-- Select Transport --</option>
+        @foreach ($transports as $transport)
+            <option value="{{ $transport->name }}">{{ $transport->name }}</option>
+        @endforeach
+    </select>
+</div>
+
 
         {{-- Price --}}
         <div>

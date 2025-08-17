@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transportation;
 use Illuminate\Http\Request;
 use App\Models\Trip;
 use App\Models\Hotel;
@@ -10,6 +11,7 @@ use App\Models\Category;
 use App\Models\governorates;
 use App\Models\TripImage;
 use App\Models\TourGuide;
+
 
 
 
@@ -39,6 +41,7 @@ class AdminTripController extends Controller
             'price' => 'nullable|numeric',
             'count_days' => 'required|integer|min:1',
             'guide_id' => 'nullable|exists:tour_guides,id',
+            'transportation' => 'required|string|max:255',
         ]);
 
      $mainImage = null;
@@ -60,7 +63,7 @@ if ($request->hasFile('image')) {
             'guide_id' => $request->guide_id,
             'price' => $request->price,
             'count_days' => $request->count_days,
-            
+            'transportation' => $request->transportation,
             
         ]);
 
@@ -88,8 +91,9 @@ public function create()
         $categories = Category::all();
         $governorates = governorates::all();
         $tourGuides = TourGuide::all();
+        $transports = Transportation::all();
 
-        return view('admin_trips.create', compact('hotels', 'categories', 'governorates','tourGuides'));
+        return view('admin_trips.create', compact('hotels', 'categories', 'governorates','tourGuides','transports'));
     }
 
 }

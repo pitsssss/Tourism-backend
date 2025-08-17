@@ -33,7 +33,10 @@ class DatabaseSeeder extends Seeder {
              RestaurantSeeder::class,
              PlacesSeeder::class,
              GuideSeeder::class,
-            
+             HotelRoomSeeder::class,
+            day_activitiesSeeder::class,
+            day_placesSeeder::class,
+            day_restaurantsSeeder::class,
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,

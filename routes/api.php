@@ -120,7 +120,13 @@ Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getT
 Route::get('/transportations', [PrivateTripController::class, 'getTransportations']);//show all
 Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
 Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة
+Route::get('/tour-guides', [PrivateTripController::class, 'getTourGuides']);//show all
+Route::post('/private-trips/{privateTrip}/choose-tour-guide', [PrivateTripController::class, 'chooseTourGuide']);//يختار الدليل للرحلة الخاصة
+Route::get('/hotels_Room/{id}', [HotelController::class, 'show_Room']);
+Route::post('/private-trips/{privateTrip}/choose-room', [PrivateTripController::class, 'chooseRoom']);
 
+Route::get('/days/{dayId}', [PrivateTripController::class, 'showDay']);
+Route::post('/days/{dayId}/add-element', [PrivateTripController::class, 'addElement']);
 
 Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);

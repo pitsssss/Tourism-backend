@@ -18,4 +18,12 @@ class HotelController extends Controller
     return response()->json($hotel);
 }
 
+public function show_Room($id)
+    {
+        $hotel = Hotel::with(['rooms' => function($query) {
+            $query->where('available_rooms', '>', 0); // بس الغرف الفاضية
+        }])->findOrFail($id);
+
+        return response()->json($hotel);
+    }
 }

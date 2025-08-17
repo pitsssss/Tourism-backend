@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->string('cuisine_type')->nullable();
+            //$table->string('cuisine_type')->nullable();
             $table->string('location');
             $table->string('phone_number')->nullable();
             $table->float('rating')->nullable();

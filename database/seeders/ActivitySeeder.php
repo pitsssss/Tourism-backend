@@ -21,7 +21,7 @@ class ActivitySeeder extends Seeder
             'description' => 'Swimming in the oldest and biggest sea int he world',
             'image' => 'swimming.jpg',
             'governorate_id' => 1,
-            'day_id'=>1
+            
         ]);
         Activity::create([
             'name' => 'Climbing',
@@ -30,7 +30,7 @@ class ActivitySeeder extends Seeder
             'description' => 'climbing the hugest mountain in the area',
             'image' => 'climbing.jpg',
             'governorate_id' => 1,
-            'day_id'=>2
+            
         ]);
          Activity::create([
             'name' => 'Camel Riding',
@@ -39,7 +39,7 @@ class ActivitySeeder extends Seeder
             'description' => 'Experience a desert camel ride.',
             'image' => 'camel.jpg',
             'governorate_id' => 1,
-            'day_id'=>3
+            
         ]);
    
    
@@ -49,7 +49,7 @@ class ActivitySeeder extends Seeder
             'end_time' => '12:00:00',
             'description' => 'Ride horses along scenic mountain trails.',
             'image' => 'imgs\activity.img\hv_image001_2014817.jpg',
-            'day_id' => 1, 
+            
             'governorate_id' => 1,
         ]);
 

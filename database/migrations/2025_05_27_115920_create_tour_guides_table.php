@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
     $table->string('name');
     $table->string('phone');
-    $table->float('rating')->default(0); // من 5 مثلاً
+    $table->float('rating')->default(0); 
     $table->string('image')->nullable();
    //$table->foreignId('trip_id')->constrained('trips')->onDelete('cascade'); // كل دليل مرتبط برحلة جاهزة
     $table->timestamps();
