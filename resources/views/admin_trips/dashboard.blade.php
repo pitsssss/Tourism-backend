@@ -7,7 +7,7 @@
 
     <!-- ✅ زر إضافة -->
     <div class="mb-4">
-        <a href="{{ route('admin_trips.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <a href="{{ route('trips.create.step1') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             + Add new Trip 
         </a>
     </div>
@@ -61,7 +61,7 @@
 
                     {{-- ✅ زر التعديل --}}
                     <div class="text-center mt-4">
-                        <a href="{{ route('admin_trips.edit', $trip->id) }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        {{-- <a href="{{ route('admin_trips.edit', $trip->id) }}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"> --}}
                             Edit Trip
                         </a>
                     </div>

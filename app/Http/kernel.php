@@ -50,8 +50,8 @@ class Kernel extends HttpKernel
         'admin_users' => \App\Http\Middleware\AdminUsersMiddleware::class,
         'admin_trips' => \App\Http\Middleware\AdminTripsMiddleware::class,
         'admin_tour_guides' => \App\Http\Middleware\AdminTourGuidesMiddleware::class,
-
- 
+       'admin_hotels' => \App\Http\Middleware\AdminHotelMiddleware::class,
+ 'admin_restaurants'=> \App\Http\Middleware\AdminRestaurantMiddleware::class,
 
 
     ];

@@ -5,10 +5,12 @@ use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminUsersController;
 use App\Http\Controllers\Admin\AdminTripController;
 use App\Http\Controllers\Admin\AdminTourGuidesController;
+use App\Http\Controllers\Admin\AdminRestaurantController;
 use App\Http\Middleware\Admin as AdminMiddleware;
 use App\Http\Middleware\AdminUsersMiddleware;
 use App\Http\Middleware\AdminTripsMiddleware;
 use App\Http\Middleware\AdminTourGuidesMiddleware;
+use App\Http\Middleware\AdminRestaurantMiddleware;
 
 
 use Illuminate\Support\Facades\Route;
@@ -40,12 +42,22 @@ Route::middleware(['auth', AdminUsersMiddleware::class])->group(function () {
 
 Route::middleware(['auth', AdminTripsMiddleware::class])->group(function () {
     Route::get('/dashboard', [AdminTripController::class, 'dashboard'])->name('dashboard');
- Route::get('/create', [AdminTripController::class, 'create'])->name('admin_trips.create');
-    Route::post('/', [AdminTripController::class, 'store'])->name('admin_trips.store');
-    Route::get('/{trip}/edit', [AdminTripController::class, 'edit'])->name('admin_trips.edit');
-    Route::put('/{trip}', [AdminTripController::class, 'update'])->name('update');
-    Route::delete('/{trip}', [AdminTripController::class, 'destroy'])->name('destroy');
-   
+//  Route::get('/create', [AdminTripController::class, 'create'])->name('admin_trips.create');
+//     Route::post('/', [AdminTripController::class, 'store'])->name('admin_trips.store');
+    
+    Route::get('create/step1', [AdminTripController::class, 'createStep1'])->name('trips.create.step1');
+    Route::post('create/step1', [AdminTripController::class, 'storeStep1'])->name('trips.store.step1');
+
+    Route::get('create/step2', [AdminTripController::class, 'createStep2'])->name('trips.create.step2');
+    Route::post('create/step2', [AdminTripController::class, 'storeStep2'])->name('trips.store.step2');
+
+    Route::get('create/step3', [AdminTripController::class, 'createStep3'])->name('trips.create.step3');
+    Route::post('create/step3', [AdminTripController::class, 'storeStep3'])->name('trips.store.step3');
+
+    Route::get('create/step4', [AdminTripController::class, 'createStep4'])->name('trips.create.step4');
+    Route::post('create/step4', [AdminTripController::class, 'storeStep4'])->name('trips.store.step4');
+
+    Route::post('store-final', [AdminTripController::class, 'storeFinal'])->name('trips.store.final');
 });
 
 
@@ -60,6 +72,14 @@ Route::middleware(['auth', AdminTourGuidesMiddleware::class])->group(function ()
 
 
 
+Route::middleware(['auth', AdminRestaurantMiddleware::class])->group(function () {
+    Route::get('/admin-restaurants', [AdminRestaurantController::class, 'index'])->name('admin_restaurants.index');
+    Route::get('/admin-restaurants/create', [AdminRestaurantController::class, 'create'])->name('admin_restaurants.create');
+    Route::post('/admin-restaurants', [AdminRestaurantController::class, 'store'])->name('admin_restaurants.store');
+    Route::get('/admin-restaurants/{restaurant}/edit', [AdminRestaurantController::class, 'edit'])->name('admin_restaurants.edit');
+    Route::put('/admin-restaurants/{restaurant}', [AdminRestaurantController::class, 'update'])->name('admin_restaurants.update');
+    Route::delete('/admin-restaurants/{restaurant}', [AdminRestaurantController::class, 'destroy'])->name('admin_restaurants.destroy');
+});
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

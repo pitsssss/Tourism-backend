@@ -43,7 +43,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('admin_hotels.dashboard');
             case 'admin_tour_guides':
                 return redirect()->route('admin_tour_guides.index');
-            
+            case 'admin_restaurants':
+                return redirect()->route('admin_restaurants.index');
             default:
                 return redirect('/'); 
         }

@@ -25,7 +25,9 @@ return new class extends Migration
             $table->foreignId('governorate_id')->nullable()->constrained('governorates') ->onDelete('set null');
             $table->unsignedBigInteger('guide_id')->constrained('tour_guides')->onDelete('set null');
              $table->foreignId('transportation_id')->nullable()->constrained('transportations')->nullOnDelete();
-            $table->timestamps();
+            $table->foreignId('room_id')->nullable()->constrained('hotel__rooms')->onDelete('set null');
+
+             $table->timestamps();
         });
     }
 

@@ -31,4 +31,9 @@ public function favorites()
     {
         return $this->belongsToMany(Day::class, 'day_restaurant');
     }
+    public function images()
+{
+    return $this->hasMany(RestaurantImage::class);
+}
+
 }

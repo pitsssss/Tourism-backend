@@ -43,6 +43,16 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+          User::updateOrCreate(
+            ['email' => 'admin_restaurants@gmail.com'], // حتى ما ينعاد كل مرة
+            [
+                'name' => ' admin_restaurants',
+                'password' => Hash::make('123456789'), // غيريها لكلمة سر أقوى
+               'role' => 'admin_restaurants',
+                'is_verified' => true,
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
 

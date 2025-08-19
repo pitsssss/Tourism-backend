@@ -9,7 +9,7 @@ class Trip extends Model
 {
    protected $fillable = [
 		'name',
-        'transport',
+        //'transport',
         'description',
 		'start_date',
 		'image',
@@ -18,7 +18,9 @@ class Trip extends Model
         'price',
         'count_days',
         'governorate_id',
-        'guide_id'
+        'guide_id',
+        'room_id',
+        'transportation_id'
         
 	];
 
@@ -57,5 +59,8 @@ public function favorites()
 {
     return $this->morphMany(Favorite::class, 'favorable');
 }
-
+public function room()
+    {
+        return $this->belongsTo(Hotel_Room::class, 'room_id');
+    }
 }

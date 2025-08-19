@@ -72,6 +72,7 @@ Route::get('/trips/category/{categoryId}', [TripsController::class, 'showCategor
  Route::get('/sortedTrips', [TripsController::class, 'showTripsSorted']);
 Route::get('/activity_details/{activityId}', [TripsController::class, 'show_activity_details']);//new
 Route::get('/hotels/{id}', [HotelController::class, 'show']);//hotel_details
+Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show_details']);//restaurant details
 /////Explor
 Route::get('/explore/hotels', [ExploreController::class, 'getAllHotels']);
 Route::get('/explore/restaurants', [ExploreController::class, 'getAllRestaurants']);
