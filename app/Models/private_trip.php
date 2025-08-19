@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class private_trip extends Model
 {
-    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start','transportation_id','tour_guide_id','hotel_room_id'];
+    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start','transportation_id','tour_guide_id','hotel_room_id','hotel_id'];
 
     public function governorate()
     {
@@ -30,5 +30,12 @@ public function transportations()
     {
         return $this->belongsTo(TourGuide::class, 'tour_guide_id');
     }
-
+public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
+    }
+     public function hotelRoom()
+    {
+        return $this->belongsTo(Hotel_Room::class);
+    }
 }

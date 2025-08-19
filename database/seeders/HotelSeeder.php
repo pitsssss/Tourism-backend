@@ -45,5 +45,17 @@ class HotelSeeder extends Seeder
             'extra_images' => ['img1.jpg', 'img2.jpg', 'img3.jpg'],
             'facilities' => ['Wi-Fi', 'Dinner', 'Pool'],
         ]);
+
+          Hotel::create([
+            'name' => 'فندق ',
+            'description' => 'فندق رائع على البحر مع إطلالة مميزة وخدمات ممتازة.',
+            'rating' => 4.5,
+            'image' => 'main.jpg', // صورة رئيسية
+            'location' => '35.5, 35.8',
+            'phone_number' => '099999999',
+            'governorate_id' => 1,
+            'extra_images' => ['img1.jpg', 'img2.jpg', 'img3.jpg'],
+            'facilities' => ['Wi-Fi', 'Dinner', 'Pool'],
+        ]);
     }
 }

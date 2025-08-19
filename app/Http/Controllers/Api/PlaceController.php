@@ -10,7 +10,17 @@ class PlaceController extends Controller
 {
     public function index()
 {
-    $places = Place::with('category')->get(); // جلب الأماكن مع التصنيف
+    $places = Place::with('category')->get(); 
     return response()->json($places);
 }
+
+public function show_details($id)
+{
+    $place = Place::with('images:id,place_id,image_path', 'governorate:id,name')
+        ->select('id', 'name', 'location', 'description', 'image', 'governorate_id')
+        ->findOrFail($id);
+
+    return response()->json($place);
+}
+
 }

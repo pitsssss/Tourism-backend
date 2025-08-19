@@ -73,6 +73,7 @@ Route::get('/trips/category/{categoryId}', [TripsController::class, 'showCategor
 Route::get('/activity_details/{activityId}', [TripsController::class, 'show_activity_details']);//new
 Route::get('/hotels/{id}', [HotelController::class, 'show']);//hotel_details
 Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show_details']);//restaurant details
+Route::get('/places/{place}', [PlaceController::class, 'show_details']);//places details
 /////Explor
 Route::get('/explore/hotels', [ExploreController::class, 'getAllHotels']);
 Route::get('/explore/restaurants', [ExploreController::class, 'getAllRestaurants']);
@@ -128,6 +129,8 @@ Route::post('/private-trips/{privateTrip}/choose-room', [PrivateTripController::
 
 Route::get('/days/{dayId}', [PrivateTripController::class, 'showDay']);
 Route::post('/days/{dayId}/add-element', [PrivateTripController::class, 'addElement']);
+
+Route::get('/private_trip_details/{privateTrip}', [PrivateTripController::class, 'show']);//grt private trip details
 
 Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);

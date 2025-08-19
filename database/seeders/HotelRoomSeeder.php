@@ -13,6 +13,15 @@ class HotelRoomSeeder extends Seeder
      */
     public function run(): void
     {
+
+         Hotel_Room::create([
+                'hotel_id' => 2,
+                'room_type' => 'single',
+                'capacity' => 1,
+                'price' => 50.00,
+                'available_rooms' => 10,
+                'total_rooms' => 10,
+            ]);
         // مثال: نفترض عندك فندق واحد موجود بالفعل
         $hotel = Hotel::first(); // أو تختاري ID معين
 

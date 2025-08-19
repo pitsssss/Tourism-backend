@@ -50,10 +50,20 @@ class PrivateTripController extends Controller
         ], 201);
     }
 
-    public function show(private_trip $private_trip)
-    {
-        //
-    }
+  public function show($id)
+{
+    $trip = Private_trip::with([
+        'user:id,name,email',
+        'governorate:id,name',
+        'transportations:id,name',
+        'tourGuide:id,name,phone,image',
+        'hotel:id,name,location',
+        'hotelRoom:id,hotel_id,room_type,price'
+    ])->findOrFail($id);
+
+    return response()->json($trip);
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -165,26 +175,28 @@ public function chooseTourGuide(Request $request, Private_trip $privateTrip)
 }
 
  public function chooseRoom(Request $request, Private_trip $privateTrip)
-    {
-        $request->validate([
-            'hotel_room_id' => 'required|exists:hotel__rooms,id',
-        ]);
+{
+    $request->validate([
+        'hotel_room_id' => 'required|exists:hotel__rooms,id',
+    ]);
 
-        $room = Hotel_Room::findOrFail($request->hotel_room_id);
+    $room = Hotel_Room::with('hotel')->findOrFail($request->hotel_room_id);
 
-        if ($room->available_rooms < 1) {
-            return response()->json(['message' => 'No available rooms'], 400);
-        }
-        
-        $privateTrip->update([
-            'hotel_room_id' => $room->id
-        ]);
-
-        return response()->json([
-            'message' => 'Room selected successfully',
-            'private_trip' => $privateTrip
-        ]);
+    if ($room->available_rooms < 1) {
+        return response()->json(['message' => 'No available rooms'], 400);
     }
+
+    $privateTrip->update([
+        'hotel_room_id' => $room->id,
+        'hotel_id'      => $room->hotel_id, // ← هون بنحط الفندق كمان
+    ]);
+
+    return response()->json([
+        'message' => 'Room selected successfully',
+        'private_trip' => $privateTrip->load('hotel', 'hotelRoom')
+    ]);
+}
+
 
      public function showDay($dayId)
     {
@@ -199,27 +211,52 @@ public function chooseTourGuide(Request $request, Private_trip $privateTrip)
 
     // إضافة عنصر جديد (Activity / Place / Restaurant) إلى يوم محدد
     public function addElement(Request $request, $dayId)
-    {
-        $day = Day::findOrFail($dayId);
+{
+    $day = Day::findOrFail($dayId);
 
-        $request->validate([
-            'type' => 'required|in:activity,place,restaurant',
-            'element_id' => 'required|integer'
-        ]);
+    $request->validate([
+        'type' => 'required|in:activity,place,restaurant',
+        'element_id' => 'required|integer'
+    ]);
 
-        switch ($request->type) {
-            case 'activity':
+    $alreadyExists = false;
+
+    switch ($request->type) {
+        case 'activity':
+           $alreadyExists = $day->activities()
+    ->where('activities.id', $request->element_id)
+    ->exists();
+            if (!$alreadyExists) {
                 $day->activities()->attach($request->element_id);
-                break;
-            case 'place':
-                $day->places()->attach($request->element_id);
-                break;
-            case 'restaurant':
-                $day->restaurants()->attach($request->element_id);
-                break;
-        }
+            }
+            break;
 
-        return response()->json(['message' => 'تم إضافة العنصر إلى اليوم بنجاح']);
+        case 'place':
+            $alreadyExists = $day->places()
+        ->where('places.id', $request->element_id)
+        ->exists();
+            if (!$alreadyExists) {
+                $day->places()->attach($request->element_id);
+            }
+            break;
+
+        case 'restaurant':
+           $alreadyExists = $day->restaurants()
+        ->where('restaurants.id', $request->element_id)
+        ->exists();
+            if (!$alreadyExists) {
+                $day->restaurants()->attach($request->element_id);
+            }
+            break;
     }
+
+    if ($alreadyExists) {
+        return response()->json([
+            'message' => 'العنصر موجود مسبقاً في هذا اليوم'
+        ], 400);
+    }
+
+    return response()->json(['message' => 'تمت إضافة العنصر لليوم بنجاح']);
+}
 
 }

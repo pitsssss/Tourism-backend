@@ -18,4 +18,8 @@ class Hotel_Room extends Model
     {
         return $this->belongsTo(Hotel::class);
     }
+     public function privateTrips()
+    {
+        return $this->hasMany(Private_trip::class);
+    }
 }

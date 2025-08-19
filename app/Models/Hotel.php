@@ -42,4 +42,8 @@ public function favorites()
     {
         return $this->hasMany(Hotel_Room::class);
     }
+    public function privateTrips()
+    {
+        return $this->hasMany(Private_trip::class);
+    }
 }

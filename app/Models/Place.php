@@ -27,4 +27,9 @@ public function favorites()
     return $this->morphMany(Favorite::class, 'favorable');
 }
 
+public function images()
+{
+    return $this->hasMany(PlaceImage::class);
+}
+
 }
