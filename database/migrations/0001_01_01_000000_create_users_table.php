@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['super_admin', 'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places', 'admin_tour_guides','user', 'visitor'])->default('visitor');
+            $table->enum('role', ['super_admin', 'admin_users', 'admin_trips', 'admin_hotels', 'admin_restaurants', 'admin_places', 'admin_tour_guides','user', 'visitor'])->default('user');
             $table->string('verification_code')->nullable();
             $table->boolean('is_verified')->nullable();
             $table->string('fcm_token')->nullable();

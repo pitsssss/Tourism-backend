@@ -38,4 +38,9 @@ public function hotel()
     {
         return $this->belongsTo(Hotel_Room::class);
     }
+
+    public function privateTripsBooking()
+ {
+    return $this->hasMany(PrivateTripsBooking::class);
+}
 }

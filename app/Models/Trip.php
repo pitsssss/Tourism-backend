@@ -21,7 +21,7 @@ class Trip extends Model
         'guide_id',
         'room_id',
         'transportation_id'
-        
+
 	];
 
     public function hotel() {
@@ -63,4 +63,8 @@ public function room()
     {
         return $this->belongsTo(Hotel_Room::class, 'room_id');
     }
+    public function tripsbooking()
+ {
+    return $this->hasMany(TripsBooking::class);
+}
 }

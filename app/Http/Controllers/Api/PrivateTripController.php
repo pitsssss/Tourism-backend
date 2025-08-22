@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
+use App\Models\PrivateTripsBooking;
 use Illuminate\Support\Facades\Auth;
 use App\Models\private_trip;
 use App\Models\Transportation;
@@ -9,6 +10,9 @@ use Illuminate\Http\Request;
 use App\Models\TourGuide;
 use App\Models\Hotel_Room;
 use App\Models\Day;
+use Stripe\Stripe;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
 
 class PrivateTripController extends Controller
 {
@@ -164,11 +168,11 @@ public function getTourGuides()
 public function chooseTourGuide(Request $request, Private_trip $privateTrip)
 {
     $request->validate([
-        'tour_guide_id' => 'nullable|exists:tour_guides,id', 
+        'tour_guide_id' => 'nullable|exists:tour_guides,id',
     ]);
 
     $privateTrip->update([
-        'tour_guide_id' => $request->tour_guide_id, 
+        'tour_guide_id' => $request->tour_guide_id,
     ]);
 
     return response()->json(['message' => 'Tour guide selected successfully']);
@@ -258,5 +262,84 @@ public function chooseTourGuide(Request $request, Private_trip $privateTrip)
 
     return response()->json(['message' => 'تمت إضافة العنصر لليوم بنجاح']);
 }
+
+public function bookTrip(Request $request)
+    {
+        $request->validate([
+            'private_trip_id' => 'required|exists:private_trips,id',
+            'tickets_count' => 'required|integer|min:1|max:10',
+
+        ]);
+
+        $trip = private_trip::findOrFail($request->private_trip_id);
+        $ticketsCount = $request->tickets_count;
+
+        $totalPrice = $trip->price * $ticketsCount;
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $paymentIntent = PaymentIntent::create([
+            'amount' => intval($totalPrice * 100),
+            'currency' => 'usd',
+        ]);
+
+        return response()->json([
+            'client_secret' => $paymentIntent->client_secret,
+            // 'payment_intent_id' => $paymentIntent->id,
+            'total_price' => $totalPrice,
+        ]);
+    }
+
+
+    public function confirmBooking(Request $request)
+    {
+        $request->validate([
+            'private_trip_id' => 'required|exists:trips,id',
+            'tickets_count' => 'required|integer|min:1',
+            'payment_intent_id' => 'required|string'
+        ]);
+
+        $trip = private_trip::findOrFail($request->trip_id);
+        $ticketsCount = $request->tickets_count;
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $payment = PaymentIntent::retrieve($request->payment_intent_id);
+
+        if ($payment->status !== 'succeeded') {
+            return response()->json(['message' => 'الدفع لم يتم بنجاح'], 400);
+        }
+
+        $booking = PrivateTripsBooking::create([
+            'private_trip_id' => $trip->id,
+            'user_id' => Auth::id(),
+            'tickets_count' => $ticketsCount,
+            'total_price' => $trip->price * $ticketsCount,
+            'status' => 'done',
+        ]);
+
+        return response()->json([
+            'message' => 'تم الحجز بنجاح',
+            'booking' => $booking
+        ]);
+    }
+
+
+
+    public function myBookings()
+    {
+        $user = Auth::user();
+
+        $bookings = PrivateTripsBooking::with('private_trip') // جلب بيانات الرحلة المرتبطة
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $bookings
+        ], 200);
+    }
+
+
+
 
 }

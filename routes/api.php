@@ -25,7 +25,9 @@ use App\Http\Controllers\Api\{
     PrivateTripController,
     UserTripsController,
     DayController,
-    FlightController
+    FlightController,
+    SettingsController,
+    FlightsBookingController
 
 
 };
@@ -114,23 +116,34 @@ Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
 
 
 Route::post('/private-trips', [PrivateTripController::class, 'store']);//make privat trip
-Route::post('/book-trip', [UserTripsController::class, 'bookTrip']);
 Route::get('/user-trips/upcoming', [UserTripsController::class, 'upcomingTrips']);//all trip upcoming
 Route::post('/private-trips/{trip}/days', [DayController::class, 'store']);//add day to private trip
 Route::get('/private-trip/{trip}/hotels', [PrivateTripController::class, 'getHotels']);//get hotel by governorates
 Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);//باقي الاماكن المرتبطة بالمحافظة
 Route::get('/transportations', [PrivateTripController::class, 'getTransportations']);//show all
 Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
+Route::post('/private-trips/{privateTrip}/choose-room', [PrivateTripController::class, 'chooseRoom']);
 Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة
 Route::get('/tour-guides', [PrivateTripController::class, 'getTourGuides']);//show all
 Route::post('/private-trips/{privateTrip}/choose-tour-guide', [PrivateTripController::class, 'chooseTourGuide']);//يختار الدليل للرحلة الخاصة
-Route::get('/hotels_Room/{id}', [HotelController::class, 'show_Room']);
-Route::post('/private-trips/{privateTrip}/choose-room', [PrivateTripController::class, 'chooseRoom']);
-
 Route::get('/days/{dayId}', [PrivateTripController::class, 'showDay']);
 Route::post('/days/{dayId}/add-element', [PrivateTripController::class, 'addElement']);
-
 Route::get('/private_trip_details/{privateTrip}', [PrivateTripController::class, 'show']);//grt private trip details
+
+Route::post('/private_trips/book', [PrivateTripController::class, 'bookTrip']);
+Route::post('/private_trips/confirm-booking', [PrivateTripController::class, 'confirmBooking']);
+Route::get('/private_trips/my-bookings', [PrivateTripController::class, 'myBookings']);
+
+
+Route::get('/hotels_Room/{id}', [HotelController::class, 'show_Room']);
+
+
+
+
+
+Route::post('/trips/book', [TripsController::class, 'bookTrip']);
+Route::post('/trips/confirm-booking', [TripsController::class, 'confirmBooking']);
+Route::get('/my-bookings', [TripsController::class, 'myBookings']);
 
 Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
@@ -142,24 +155,16 @@ Route::post('/favorites/add', [FavoriteController::class, 'add']);//add_to_favou
 Route::post('/favorites/remove', [FavoriteController::class, 'remove']);//delete_from_favorite
 Route::get('/favorites', [FavoriteController::class, 'index']);
 
-     // ✅ Bookings
-    // Route::get('/bookings', [BookingController::class, 'index']);
-    // Route::post('/bookings', [BookingController::class, 'store']);
 
-     // ✅ Favorites
-    // Route::get('/favorites/{userId}', [FavoriteController::class, 'index']);
-    // Route::post('/favorites', [FavoriteController::class, 'store']);
-    // Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy']);
 
-     // ✅ Reviews
-    // Route::post('/reviews', [ReviewController::class, 'store']);
-    // Route::get('/reviews/{type}/{id}', [ReviewController::class, 'getFor']);
 
-    // ✅ Notifications
-    // Route::get('/notifications/{userId}', [NotificationController::class, 'index']);
+Route::get('/profile', [ProfileController::class, 'index']);
+Route::put('/profile/update', [ProfileController::class, 'update']);
 
-     // ✅ Contact Messages
-    // Route::post('/contact-messages', [ContactMessageController::class, 'store'])->middleware('throttle:contact');
+Route::get('settings/{key}', [SettingsController::class, 'show']);
+
+
+
 
     // ✅ Logout//tested
 Route::post('/logout', [AuthController::class, 'logout']);
