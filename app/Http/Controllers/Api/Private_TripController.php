@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PrivateTripsBooking;
 use Illuminate\Support\Facades\Auth;
-use App\Models\private_trip;
+use App\Models\Private_Trip;
 use App\Models\Transportation;
 use Illuminate\Http\Request;
 use App\Models\TourGuide;
@@ -14,7 +14,7 @@ use Stripe\Stripe;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
 
-class PrivateTripController extends Controller
+class Private_TripController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -42,7 +42,7 @@ class PrivateTripController extends Controller
             'trip_date_start' => 'required|date',
         ]);
 
-        $trip = Private_trip::create([
+        $trip = Private_Trip::create([
             'user_id' => auth()->id(),
             'governorate_id' => $request->governorate_id,
             'trip_date_start' => $request->trip_date_start,
@@ -56,7 +56,7 @@ class PrivateTripController extends Controller
 
   public function show($id)
 {
-    $trip = Private_trip::with([
+    $trip = Private_Trip::with([
         'user:id,name,email',
         'governorate:id,name',
         'transportations:id,name',
@@ -72,7 +72,7 @@ class PrivateTripController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(private_trip $private_trip)
+    public function edit(Private_Trip $private_trip)
     {
         //
     }
@@ -80,7 +80,7 @@ class PrivateTripController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, private_trip $private_trip)
+    public function update(Request $request, Private_Trip $private_trip)
     {
         //
     }
@@ -88,11 +88,11 @@ class PrivateTripController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(private_trip $private_trip)
+    public function destroy(Private_Trip $private_trip)
     {
         //
     }
-    public function getHotels(Private_trip $trip)
+    public function getHotels(Private_Trip $trip)
 {
     $hotels = $trip->governorate->hotels;
 
@@ -110,7 +110,7 @@ class PrivateTripController extends Controller
     ]);
 }
 
- public function getTripGovernorateDetails(Private_trip $trip)
+ public function getTripGovernorateDetails(Private_Trip $trip)
     {
         if (!$trip->governorate) {
             return response()->json([
@@ -137,7 +137,7 @@ class PrivateTripController extends Controller
     return response()->json(Transportation::all());
 }
 
-public function chooseTransportation(Request $request, Private_trip $privateTrip)
+public function chooseTransportation(Request $request, Private_Trip $privateTrip)
 {
     $request->validate([
         'transportation_id' => 'required|exists:transportations,id',
@@ -165,7 +165,7 @@ public function getTourGuides()
     return response()->json($guides);
 }
 
-public function chooseTourGuide(Request $request, Private_trip $privateTrip)
+public function chooseTourGuide(Request $request, Private_Trip $privateTrip)
 {
     $request->validate([
         'tour_guide_id' => 'nullable|exists:tour_guides,id',
@@ -178,7 +178,7 @@ public function chooseTourGuide(Request $request, Private_trip $privateTrip)
     return response()->json(['message' => 'Tour guide selected successfully']);
 }
 
- public function chooseRoom(Request $request, Private_trip $privateTrip)
+ public function chooseRoom(Request $request, Private_Trip $privateTrip)
 {
     $request->validate([
         'hotel_room_id' => 'required|exists:hotel__rooms,id',
@@ -271,7 +271,7 @@ public function bookTrip(Request $request)
 
         ]);
 
-        $trip = private_trip::findOrFail($request->private_trip_id);
+        $trip = Private_Trip::findOrFail($request->private_trip_id);
         $ticketsCount = $request->tickets_count;
 
         $totalPrice = $trip->price * $ticketsCount;
@@ -293,12 +293,12 @@ public function bookTrip(Request $request)
     public function confirmBooking(Request $request)
     {
         $request->validate([
-            'private_trip_id' => 'required|exists:trips,id',
+            'private_trip_id' => 'required|exists:private_trips,id',
             'tickets_count' => 'required|integer|min:1',
             'payment_intent_id' => 'required|string'
         ]);
 
-        $trip = private_trip::findOrFail($request->trip_id);
+        $trip = Private_Trip::findOrFail($request->private_trip_id);
         $ticketsCount = $request->tickets_count;
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -340,6 +340,56 @@ public function bookTrip(Request $request)
     }
 
 
+
+
+public function removeElement(Request $request, $dayId)
+{
+    $day = Day::findOrFail($dayId);
+
+    $request->validate([
+        'type' => 'required|in:activity,place,restaurant',
+        'element_id' => 'required|integer'
+    ]);
+
+    $exists = false;
+
+    switch ($request->type) {
+        case 'activity':
+            $exists = $day->activities()
+                ->where('activities.id', $request->element_id)
+                ->exists();
+            if ($exists) {
+                $day->activities()->detach($request->element_id);
+            }
+            break;
+
+        case 'place':
+            $exists = $day->places()
+                ->where('places.id', $request->element_id)
+                ->exists();
+            if ($exists) {
+                $day->places()->detach($request->element_id);
+            }
+            break;
+
+        case 'restaurant':
+            $exists = $day->restaurants()
+                ->where('restaurants.id', $request->element_id)
+                ->exists();
+            if ($exists) {
+                $day->restaurants()->detach($request->element_id);
+            }
+            break;
+    }
+
+    if (! $exists) {
+        return response()->json([
+            'message' => 'العنصر غير موجود في هذا اليوم'
+        ], 404);
+    }
+
+    return response()->json(['message' => 'تم حذف العنصر من اليوم بنجاح']);
+}
 
 
 }

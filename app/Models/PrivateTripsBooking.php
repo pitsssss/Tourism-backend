@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PrivateTripsBooking extends Model
 {
+
+    protected $table = 'private_trips_bookings';
     protected $fillable = [
         'private_trip_id',
         'user_id',
@@ -17,11 +19,15 @@ class PrivateTripsBooking extends Model
 
     public function private_trip()
     {
-        return $this->belongsTo(private_trip::class);
+        return $this->belongsTo(Private_Trip::class);
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+
+
+
 }

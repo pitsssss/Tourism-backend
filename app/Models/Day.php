@@ -8,6 +8,25 @@ class Day extends Model
 {
    protected $fillable = ['name', 'TripDay', 'tripable_id', 'tripable_type', 'date'];
 
+
+   protected static function booted(): void
+   {
+       static::created(function ($day) {
+           $trip = $day->tripable;
+           if ($trip instanceof Private_Trip) {
+               $trip->save();
+           }
+       });
+
+       static::deleted(function ($day) {
+           $trip = $day->tripable;
+           if ($trip instanceof Private_Trip) {
+               $trip->save();
+           }
+       });
+   }
+
+
     public function trip()
     {
         return $this->belongsTo(Trip::class);

@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class private_trip extends Model
+class Private_Trip extends Model
 {
-    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start','transportation_id','tour_guide_id','hotel_room_id','hotel_id'];
+    protected $table = 'private_trips';
+    protected $fillable = ['user_id', 'governorate_id', 'trip_date_start','transportation_id','tour_guide_id','hotel_room_id','hotel_id','price'];
 
     public function governorate()
     {
@@ -43,4 +44,30 @@ public function hotel()
  {
     return $this->hasMany(PrivateTripsBooking::class);
 }
+
+protected static function booted()
+    {
+        static::saving(function ($trip) {
+            $trip->price = 0;
+
+            $daysCount = $trip->days()->count();
+            $daysCount = max(1, $daysCount);
+
+
+            if ($trip->hotel_room_id) {
+                $room = Hotel_Room::find($trip->hotel_room_id);
+                if ($room) {
+                    $trip->price += $room->price * $daysCount;
+                }
+            }
+
+
+            if ($trip->transportation_id) {
+                $transport = Transportation::find($trip->transportation_id);
+                if ($transport) {
+                    $trip->price += $transport->price_per_day * $daysCount;
+                }
+            }
+        });
+    }
 }

@@ -22,12 +22,14 @@ use App\Http\Controllers\Api\{
     PlaceController,
     ExploreController,
     GovernoratesController,
-    PrivateTripController,
+    Private_TripController,
     UserTripsController,
     DayController,
     FlightController,
-    SettingsController,
-    FlightsBookingController
+    SettingController,
+    FlightsBookingController,
+    ProfileController,
+    SettingsController
 
 
 };
@@ -115,24 +117,27 @@ Route::post('/save-fcm-token', [AuthController::class, 'saveFcmToken']);
 
 
 
-Route::post('/private-trips', [PrivateTripController::class, 'store']);//make privat trip
+Route::post('/private-trips', [Private_TripController::class, 'store']);//make privat trip
 Route::get('/user-trips/upcoming', [UserTripsController::class, 'upcomingTrips']);//all trip upcoming
 Route::post('/private-trips/{trip}/days', [DayController::class, 'store']);//add day to private trip
-Route::get('/private-trip/{trip}/hotels', [PrivateTripController::class, 'getHotels']);//get hotel by governorates
-Route::get('/private-trips/{trip}/details', [PrivateTripController::class, 'getTripGovernorateDetails']);//باقي الاماكن المرتبطة بالمحافظة
-Route::get('/transportations', [PrivateTripController::class, 'getTransportations']);//show all
-Route::post('/private-trip/{privateTrip}/transportation', [PrivateTripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
-Route::post('/private-trips/{privateTrip}/choose-room', [PrivateTripController::class, 'chooseRoom']);
+Route::get('/private-trip/{trip}/hotels', [Private_TripController::class, 'getHotels']);//get hotel by governorates
+Route::get('/private-trips/{trip}/details', [Private_TripController::class, 'getTripGovernorateDetails']);//باقي الاماكن المرتبطة بالمحافظة
+Route::get('/transportations', [Private_TripController::class, 'getTransportations']);//show all
+Route::post('/private-trip/{privateTrip}/transportation', [Private_TripController::class, 'chooseTransportation']);// اختيار وسيلة نقل لرحلة خاصة
+Route::post('/private-trips/{privateTrip}/choose-room', [Private_TripController::class, 'chooseRoom']);
 Route::delete('/private-trip/{trip}/days/{dayId}', [DayController::class, 'destroyDay']);//حذف يوم من الرحلة الخاصة
-Route::get('/tour-guides', [PrivateTripController::class, 'getTourGuides']);//show all
-Route::post('/private-trips/{privateTrip}/choose-tour-guide', [PrivateTripController::class, 'chooseTourGuide']);//يختار الدليل للرحلة الخاصة
-Route::get('/days/{dayId}', [PrivateTripController::class, 'showDay']);
-Route::post('/days/{dayId}/add-element', [PrivateTripController::class, 'addElement']);
-Route::get('/private_trip_details/{privateTrip}', [PrivateTripController::class, 'show']);//grt private trip details
+Route::get('/tour-guides', [Private_TripController::class, 'getTourGuides']);//show all
+Route::post('/private-trips/{privateTrip}/choose-tour-guide', [Private_TripController::class, 'chooseTourGuide']);//يختار الدليل للرحلة الخاصة
+Route::get('/days/{dayId}', [Private_TripController::class, 'showDay']);
+Route::post('/days/{dayId}/add-element', [Private_TripController::class, 'addElement']);
+Route::get('/private_trip_details/{privateTrip}', [Private_TripController::class, 'show']);//grt private trip details
 
-Route::post('/private_trips/book', [PrivateTripController::class, 'bookTrip']);
-Route::post('/private_trips/confirm-booking', [PrivateTripController::class, 'confirmBooking']);
-Route::get('/private_trips/my-bookings', [PrivateTripController::class, 'myBookings']);
+Route::delete('/days/{dayId}/remove-element', [Private_TripController::class, 'removeElement']);
+
+
+Route::post('/private_trips/book', [Private_TripController::class, 'bookTrip']);
+Route::post('/private_trips/confirm-booking', [Private_TripController::class, 'confirmBooking']);
+Route::get('/private_trips/my-bookings', action: [Private_TripController::class, 'myBookings']);
 
 
 Route::get('/hotels_Room/{id}', [HotelController::class, 'show_Room']);

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SettingsPage;
 use Illuminate\Http\Request;
 
-class SettingController extends Controller
+class SettingsController extends Controller
 {
     /**
      * عرض صفحة إعدادات حسب المفتاح واللغة

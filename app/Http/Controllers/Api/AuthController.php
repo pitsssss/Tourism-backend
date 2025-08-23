@@ -30,7 +30,7 @@ class AuthController extends Controller
             'name' => $fullName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'visitor' // default role
+            'role' => 'user' // default role
         ]);
         // Generate a random 6-digit code
     $verificationCode = random_int(100000, 999999);
@@ -110,7 +110,7 @@ public function resendVerificationCode(Request $request)
 
  if ($user->fcm_token) {
         $factory = (new Factory)
-            ->withServiceAccount(base_path('storage/app/firebase/firebase_credentials.json')); 
+            ->withServiceAccount(base_path('storage/app/firebase/firebase_credentials.json'));
 
         $messaging = $factory->createMessaging();
 
@@ -149,7 +149,7 @@ public function resendVerificationCode(Request $request)
         'fcm_token' => 'required|string',
     ]);
 
-    $user = auth()->user(); 
+    $user = auth()->user();
     $user->fcm_token = $request->fcm_token;
     $user->save();
 

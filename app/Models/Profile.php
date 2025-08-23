@@ -15,8 +15,6 @@ class Profile extends Model
 
 	protected $fillable = [
 		'user_id',
-        'user_name',
-        'user_email',
 		'phoneNumber',
 		'address',
 		'date_of_birth',

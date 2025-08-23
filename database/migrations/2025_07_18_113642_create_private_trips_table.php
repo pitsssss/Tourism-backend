@@ -20,6 +20,9 @@ return new class extends Migration
            $table->foreignId('tour_guide_id')->nullable()->constrained('tour_guides')->nullOnDelete();
            $table->foreignId('hotel_room_id')->nullable()->constrained('hotel__rooms')->nullOnDelete();
            $table->foreignId('hotel_id')->nullable()->constrained('hotels')->nullOnDelete();
+           $table->decimal('price',10,2)->default(0);
+
+
            $table->timestamps();
         });
     }

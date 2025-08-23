@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 
 class Hotel extends Model {
-    
+
      protected $fillable = [
          'name', 'description', 'rating', 'image', 'location', 'phone_number','governorate_id','extra_images','facilities'
      ];
@@ -27,7 +27,7 @@ class Hotel extends Model {
 {
     return $this->morphMany(Review::class, 'reviewable');
 }
-   
+
 public function governorate()
 {
     return $this->belongsTo(Governorates::class);
@@ -44,6 +44,6 @@ public function favorites()
     }
     public function privateTrips()
     {
-        return $this->hasMany(Private_trip::class);
+        return $this->hasMany(Private_Trip::class);
     }
 }

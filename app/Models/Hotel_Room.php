@@ -20,6 +20,6 @@ class Hotel_Room extends Model
     }
      public function privateTrips()
     {
-        return $this->hasMany(Private_trip::class);
+        return $this->hasMany(Private_Trip::class);
     }
 }

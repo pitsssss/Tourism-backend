@@ -37,13 +37,14 @@ class DatabaseSeeder extends Seeder {
             day_activitiesSeeder::class,
             day_placesSeeder::class,
             day_restaurantsSeeder::class,
-            place_imagesSeeder::class
+            place_imagesSeeder::class,
+            SettingsPagesSeeder::class
             // BookingSeeder::class,
             // FavoriteSeeder::class,
             // ReviewSeeder::class,
             // NotificationSeeder::class,
             // ContactMessageSeeder::class,
-           
+
            // UserTripSeeder::class
         ] );
     }
