@@ -152,7 +152,9 @@ Route::get('/my-bookings', [TripsController::class, 'myBookings']);
 
 Route::post('/flights/submit-passenger', [FlightController::class, 'submitPassenger']);
 Route::post('/flights/pay-and-book', [FlightController::class, 'payAndBook']);
-Route::get('/user/bookings', [BookingController::class, 'getUserBookings']);
+Route::post('/flights/confirm-booking', [FlightController::class, 'confirmBooking']);
+
+Route::get('/user/bookings', [FlightsBookingController::class, 'getUserBookings']);
 Route::delete('/flights/cancel-booking/{bookingId}', [FlightController::class, 'cancelBooking']);
 
 

@@ -29,40 +29,40 @@ class BookingController extends Controller
     }
 
 
-    public function getUserBookings()
-    {
-        $bookings = Booking::where('user_id', Auth::id())->latest()->get();
+    // public function getUserBookings()
+    // {
+    //     $bookings = Booking::where('user_id', Auth::id())->latest()->get();
 
-        $formatted = $bookings->map(function ($booking) {
-            $details = json_decode($booking->flight_details, true);
-            $passengers = json_decode($booking->passenger_details, true);
+    //     $formatted = $bookings->map(function ($booking) {
+    //         $details = json_decode($booking->flight_details, true);
+    //         $passengers = json_decode($booking->passenger_details, true);
 
-            $segments = [];
-            foreach ($details['flightOffers'][0]['itineraries'] as $itinerary) {
-                foreach ($itinerary['segments'] as $segment) {
-                    $segments[] = [
-                        'from' => $segment['departure']['iataCode'],
-                        'to' => $segment['arrival']['iataCode'],
-                        'departure_time' => $segment['departure']['at'],
-                        'arrival_time' => $segment['arrival']['at'],
-                        'flight_number' => $segment['carrierCode'] . $segment['number'],
-                    ];
-                }
-            }
+    //         $segments = [];
+    //         foreach ($details['flightOffers'][0]['itineraries'] as $itinerary) {
+    //             foreach ($itinerary['segments'] as $segment) {
+    //                 $segments[] = [
+    //                     'from' => $segment['departure']['iataCode'],
+    //                     'to' => $segment['arrival']['iataCode'],
+    //                     'departure_time' => $segment['departure']['at'],
+    //                     'arrival_time' => $segment['arrival']['at'],
+    //                     'flight_number' => $segment['carrierCode'] . $segment['number'],
+    //                 ];
+    //             }
+    //         }
 
-            return [
-                'booking_id' => $details['id'] ?? null,
-                'total_amount' => $booking->amount,
-                'currency' => $booking->currency,
-                'passenger_count' => count($passengers),
-                'itinerary' => $segments,
-                'booked_at' => $booking->created_at->toDateTimeString(),
-            ];
-        });
+    //         return [
+    //             'booking_id' => $details['id'] ?? null,
+    //             'total_amount' => $booking->amount,
+    //             'currency' => $booking->currency,
+    //             'passenger_count' => count($passengers),
+    //             'itinerary' => $segments,
+    //             'booked_at' => $booking->created_at->toDateTimeString(),
+    //         ];
+    //     });
 
-        return response()->json([
-            'success' => true,
-            'bookings' => $formatted,
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'bookings' => $formatted,
+    //     ]);
+    // }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Flight;
+use App\Models\FlightsBooking;
 use Illuminate\Http\Request;
 use App\Services\AmadeusService;
 use Illuminate\Support\Facades\Cache;
@@ -135,15 +137,15 @@ public function __construct(AmadeusService $amadeusService)
     public function payAndBook(Request $request)
 {
     $request->validate([
-        'flight_offer_id' => 'required|string',
-        'payment_method_id' => 'required|string',
+        'flight_offer_id' => 'required|string'
+        // 'payment_method_id' => 'required|string',
     ]);
 
     $flightOfferId = $request->flight_offer_id;
-    $paymentMethodId = $request->payment_method_id;
+    // $paymentMethodId = $request->payment_method_id;
 
 
-    $alreadyBooked = Booking::where('user_id', Auth::id())
+    $alreadyBooked = FlightsBooking::where('user_id', Auth::id())
     ->where('flight_offer_id', $flightOfferId)
     ->exists();
 
@@ -166,70 +168,116 @@ if ($alreadyBooked) {
 
         // Stripe
         Stripe::setApiKey(env('STRIPE_SECRET'));
+        if ($amount < 0.5) {
+            return response()->json(['message' => 'The amount is less than the minimum allowed (0.5 USD).
+            '], 400);
+        }
 
-        $intent = PaymentIntent::create([
+        $paymentIntent = PaymentIntent::create([
             'amount' => intval($amount * 100),
             'currency' => 'usd',
-            'payment_method' => $paymentMethodId,
-            'payment_method_types' => ['card'],
-            'confirmation_method' => 'manual',
-            'confirm' => true
         ]);
-
-        if ($intent->status !== 'succeeded') {
-            return response()->json(['success' => false, 'message' => 'Payment failed.']);
-        }
-
-        // ✅ بعد نجاح الدفع → احجز في Amadeus
-        $bookingResult = $this->amadeusService->createBooking($passengerData['passengers'], $flightOfferId);
-
-        // خزن في قاعدة البيانات
-        $saved = Booking::create([
-            'user_id' => Auth::id(),
-            'amadeus_booking_id' => $bookingResult['id'] ?? null,
-            'flight_offer_id' => $flightOfferId,
-            'passenger_details' => json_encode($passengerData['passengers']),
-            'flight_details' => json_encode($bookingResult),
-            'payment_intent_id' => $intent->id,
-            'amount' => $amount,
-            'currency' => 'USD',
-        ]);
-
-        // تبسيط الرسبونس
-        $segments = [];
-        foreach ($bookingResult['flightOffers'][0]['itineraries'] as $itinerary) {
-            foreach ($itinerary['segments'] as $segment) {
-                $segments[] = [
-                    'from' => $segment['departure']['iataCode'],
-                    'to' => $segment['arrival']['iataCode'],
-                    'departure_time' => $segment['departure']['at'],
-                    'arrival_time' => $segment['arrival']['at'],
-                    'flight_number' => $segment['carrierCode'] . $segment['number']
-                ];
-            }
-        }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Payment & booking successful.',
-            'booking' => [
-                'booking_id' => $bookingResult['id'] ?? null,
-                'total_amount' => $amount,
-                'currency' => 'USD',
-                'passenger_count' => count($passengerData['passengers']),
-                'itinerary' => $segments
-            ]
+            'client_secret' => $paymentIntent->client_secret,
+            // 'payment_intent_id' => $paymentIntent->id,
+            'total_price' => $amount,
         ]);
 
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'message' => $e->getMessage()]);
     }
 }
+            // 'payment_method' => $paymentMethodId,
+            // 'payment_method_types' => ['card'],
+            // 'confirmation_method' => 'manual',
+            // 'confirm' => true
+
+
+        // if ($intent->status !== 'succeeded') {
+        //     return response()->json(['success' => false, 'message' => 'Payment failed.']);
+        // }
+
+    //     // ✅ بعد نجاح الدفع → احجز في Amadeus
+    //     $bookingResult = $this->amadeusService->createBooking($passengerData['passengers'], $flightOfferId);
+
+    //     // خزن في قاعدة البيانات
+    //     $saved = Booking::create([
+    //         'user_id' => Auth::id(),
+    //         'amadeus_booking_id' => $bookingResult['id'] ?? null,
+    //         'flight_offer_id' => $flightOfferId,
+    //         'passenger_details' => json_encode($passengerData['passengers']),
+    //         'flight_details' => json_encode($bookingResult),
+    //         'payment_intent_id' => $intent->id,
+    //         'amount' => $amount,
+    //         'currency' => 'USD',
+    //     ]);
+
+    //     // تبسيط الرسبونس
+    //     $segments = [];
+    //     foreach ($bookingResult['flightOffers'][0]['itineraries'] as $itinerary) {
+    //         foreach ($itinerary['segments'] as $segment) {
+    //             $segments[] = [
+    //                 'from' => $segment['departure']['iataCode'],
+    //                 'to' => $segment['arrival']['iataCode'],
+    //                 'departure_time' => $segment['departure']['at'],
+    //                 'arrival_time' => $segment['arrival']['at'],
+    //                 'flight_number' => $segment['carrierCode'] . $segment['number']
+    //             ];
+    //         }
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Payment & booking successful.',
+    //         'booking' => [
+    //             'booking_id' => $bookingResult['id'] ?? null,
+    //             'total_amount' => $amount,
+    //             'currency' => 'USD',
+    //             'passenger_count' => count($passengerData['passengers']),
+    //             'itinerary' => $segments
+    //         ]
+    //     ]);
+
+
+
+public function confirmBooking(Request $request)
+{
+    $request->validate([
+        'flight_offer_id' => 'required|string',
+        'payment_intent_id' => 'required|string'
+    ]);
+
+    // $flight = Flight::findOrFail($request->flight_offer_id);
+    $flightOfferId = $request->flight_offer_id;
+    // $amount = $request->amount;
+
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+    $payment = PaymentIntent::retrieve($request->payment_intent_id);
+    $amount = $payment->amount / 100;
+     if ($payment->status !== 'succeeded') {
+        return response()->json(['message' => 'Payment was not completed successfully'], 400);
+    }
+
+    $booking = FlightsBooking::create([
+        'flight_offer_id' => $flightOfferId,
+        'user_id' => Auth::id(),
+        'total_price' => $amount ,
+        'status' => 'done',
+    ]);
+
+    return response()->json([
+        'message' => 'Payment completed successfully',
+        'booking' => $booking
+    ]);
+}
+
+
 
 public function cancelBooking(string $bookingId)
 {
     try {
-        $booking = Booking::where('user_id', Auth::id())
+        $booking = FlightsBooking::where('user_id', Auth::id())
             ->where('amadeus_booking_id', $bookingId)
             ->first();
 
@@ -244,8 +292,14 @@ public function cancelBooking(string $bookingId)
         // الغاء الحجز من Amadeus
         $this->amadeusService->cancelBooking($bookingId);
 
-        // إرجاع المال من Stripe
         Stripe::setApiKey(env('STRIPE_SECRET'));
+        $payment =PaymentIntent::retrieve($booking->payment_intent_id);
+            if ($payment->status !== 'succeeded') {
+            return response()->json(['success' => false, 'message' => 'Payment not successful, cannot refund.'], 400);
+         }
+
+
+        // إرجاع المال من Stripe
         \Stripe\Refund::create([
             'payment_intent' => $booking->payment_intent_id
         ]);

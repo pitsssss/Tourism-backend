@@ -166,7 +166,7 @@ public function bookTrip(Request $request)
         $payment = PaymentIntent::retrieve($request->payment_intent_id);
 
         if ($payment->status !== 'succeeded') {
-            return response()->json(['message' => 'الدفع لم يتم بنجاح'], 400);
+            return response()->json(['message' => 'Payment was not completed successfully'], 400);
         }
 
         $booking = TripsBooking::create([
@@ -178,7 +178,7 @@ public function bookTrip(Request $request)
         ]);
 
         return response()->json([
-            'message' => 'تم الحجز بنجاح',
+            'message' => 'Payment completed successfully',
             'booking' => $booking
         ]);
     }
