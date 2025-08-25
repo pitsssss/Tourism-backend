@@ -267,14 +267,14 @@ public function bookTrip(Request $request)
     {
         $request->validate([
             'private_trip_id' => 'required|exists:private_trips,id',
-            'tickets_count' => 'required|integer|min:1|max:10',
+            // 'tickets_count' => 'required|integer|min:1|max:10',
 
         ]);
 
         $trip = Private_Trip::findOrFail($request->private_trip_id);
-        $ticketsCount = $request->tickets_count;
+        // $ticketsCount = $request->tickets_count;
 
-        $totalPrice = $trip->price * $ticketsCount;
+        $totalPrice = $trip->price;
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
         $paymentIntent = PaymentIntent::create([
@@ -294,30 +294,30 @@ public function bookTrip(Request $request)
     {
         $request->validate([
             'private_trip_id' => 'required|exists:private_trips,id',
-            'tickets_count' => 'required|integer|min:1',
+            // 'tickets_count' => 'required|integer|min:1',
             'payment_intent_id' => 'required|string'
         ]);
 
         $trip = Private_Trip::findOrFail($request->private_trip_id);
-        $ticketsCount = $request->tickets_count;
+        // $ticketsCount = $request->tickets_count;
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
         $payment = PaymentIntent::retrieve($request->payment_intent_id);
 
         if ($payment->status !== 'succeeded') {
-            return response()->json(['message' => 'الدفع لم يتم بنجاح'], 400);
+            return response()->json(['message' => 'Payment was not completed successfully'], 400);
         }
 
         $booking = PrivateTripsBooking::create([
             'private_trip_id' => $trip->id,
             'user_id' => Auth::id(),
-            'tickets_count' => $ticketsCount,
-            'total_price' => $trip->price * $ticketsCount,
+            // 'tickets_count' => $ticketsCount,
+            'total_price' => $trip->price,
             'status' => 'done',
         ]);
 
         return response()->json([
-            'message' => 'تم الحجز بنجاح',
+            'message' => 'Booking completed successfully',
             'booking' => $booking
         ]);
     }

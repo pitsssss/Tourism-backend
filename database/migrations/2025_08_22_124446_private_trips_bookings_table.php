@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('private_trip_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->integer('tickets_count');
+            // $table->integer('tickets_count');
             $table->decimal('total_price', 8, 2);
             $table->string('status')->default('done'); // done / cancelled
             $table->timestamps();

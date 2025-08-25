@@ -11,7 +11,7 @@ class PrivateTripsBooking extends Model
     protected $fillable = [
         'private_trip_id',
         'user_id',
-        'tickets_count',
+        // 'tickets_count',
         'total_price',
         'status', // done / cancelled
     ];
