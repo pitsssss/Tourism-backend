@@ -97,7 +97,7 @@ public function __construct(AmadeusService $amadeusService)
             ], 400);
         }
     }
-    // داخل FlightController.php
+
 
     public function submitPassenger(Request $request)
     {
@@ -251,6 +251,7 @@ public function confirmBooking(Request $request)
     // $flight = Flight::findOrFail($request->flight_offer_id);
     $flightOfferId = $request->flight_offer_id;
     // $amount = $request->amount;
+    $passengerData = Cache::get('passenger_' . $flightOfferId);
 
     Stripe::setApiKey(env('STRIPE_SECRET'));
     $payment = PaymentIntent::retrieve($request->payment_intent_id);
@@ -260,11 +261,15 @@ public function confirmBooking(Request $request)
     }
 
     $booking = FlightsBooking::create([
-        'flight_offer_id' => $flightOfferId,
-        'user_id' => Auth::id(),
-        'total_price' => $amount ,
-        'status' => 'done',
+        'user_id'            => Auth::id(),
+        'flight_offer_id'    => $flightOfferId,
+        'passenger_details'  => $passengerData ,
+        'payment_intent_id'  => $request->payment_intent_id,
+        'amount'             => $amount,
+        'currency'           => 'USD',
+        'status'             => 'done',
     ]);
+
 
     return response()->json([
         'message' => 'Payment completed successfully',

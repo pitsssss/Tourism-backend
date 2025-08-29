@@ -13,8 +13,8 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         $table->string('flight_offer_id')->nullable();
         $table->string('amadeus_booking_id')->nullable();
-        $table->json('passenger_details');
-        $table->json('flight_details');
+        $table->json('passenger_details')->nullable();
+        // $table->json('flight_details')->nullable();
         $table->string('payment_intent_id');
         $table->decimal('amount', 10, 2);
         $table->string('currency', 3)->default('USD');
